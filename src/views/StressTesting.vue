@@ -5,18 +5,17 @@
     </el-aside>
     <el-main>
       <h2>系统测试</h2>
-      <el-form :model="form" label-width="120px">
-        <el-form-item>
-          <el-button type="primary" @click="startStressTest"> 开始压力测试 </el-button>
-        </el-form-item>
-      </el-form>
-      <el-card v-if="testResult" class="result-card">
+      <el-button type="primary" :disabled="isTestRunning" @click="startStressTest"> 开始压力测试 </el-button>
+      <el-button type="danger" :disabled="!isTestRunning" @click="stopStressTest"> 停止压力测试 </el-button>
+      <el-card v-if="testStatus" class="result-card">
         <template #header>
           <div>
-            <span>测试结果</span>
+            <span>测试状态</span>
           </div>
         </template>
-        <div>{{ testResult }}</div>
+        <div>当前连接数: {{ testStatus.currentConnections }}</div>
+        <div>成功命令数: {{ testStatus.successfulCommands }}</div>
+        <div>失败命令数: {{ testStatus.failedCommands }}</div>
       </el-card>
     </el-main>
   </el-container>
@@ -32,25 +31,53 @@ export default {
   },
   data() {
     return {
-      form: {
-        maxConnections: 1000,
-        incrementStep: 100,
-        command: 'SET k 1',
-        testDurationSeconds: 30,
-        serverUrl: 'localhost',
-        port: 6389,
-      },
-      testResult: null,
+      isTestRunning: false,
+      testStatus: null,
+      statusInterval: null,
     }
+  },
+  beforeUnmount() {
+    this.stopStatusPolling()
   },
   methods: {
     async startStressTest() {
       try {
-        const response = await axios.post('/api/stressTest', this.form)
-        this.testResult = response.data.data
+        await axios.post('/api/startStressTest')
+        this.isTestRunning = true
+        this.startStatusPolling()
       } catch (error) {
-        console.error('压力测试失败:', error)
-        this.$message.error('压力测试失败，请查看控制台获取详细信息。')
+        console.error('启动压力测试失败:', error)
+        this.$message.error('启动压力测试失败，请查看控制台获取详细信息。')
+      }
+    },
+    async stopStressTest() {
+      try {
+        await axios.post('/api/stopStressTest')
+        this.isTestRunning = false
+        this.stopStatusPolling()
+      } catch (error) {
+        console.error('停止压力测试失败:', error)
+        this.$message.error('停止压力测试失败，请查看控制台获取详细信息。')
+      }
+    },
+    startStatusPolling() {
+      this.statusInterval = setInterval(this.getTestStatus, 1000)
+    },
+    stopStatusPolling() {
+      if (this.statusInterval) {
+        clearInterval(this.statusInterval)
+        this.statusInterval = null
+      }
+    },
+    async getTestStatus() {
+      try {
+        const response = await axios.get('/api/getTestStatus')
+        this.testStatus = response.data.data
+      } catch (error) {
+        console.error('获取测试状态失败:', error)
+        this.stopStatusPolling()
+        this.isTestRunning = false
+        this.$message.error('获取测试状态失败，测试可能已经停止。')
       }
     },
   },
