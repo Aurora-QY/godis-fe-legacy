@@ -1,0 +1,71 @@
+{
+  "SsAdd": {
+    "TS31": {
+      "remark": "向myset集合中加入成员”Hello”，输出1表示加入成功向myset集合中加入成员”World”，输出1表示加入成功向myset集合中加入成员”World”，输出0表示加入失败（因为此元素已存在）查看myset集合中的所有成员",
+      "commands": [
+        {
+          "command": "SADD myset \"Hello\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "SADD myset \"World\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "SADD myset \"World\"",
+          "expected_output": "(integer) 0"
+        },
+        {
+          "command": "SMEMBERS myset",
+          "expected_output": ["1) \"Hello\"", "2) \"World\""]
+        }
+      ]
+    },
+    "TS32": {
+      "remark": "Another test case",
+      "commands": [
+        {
+          "command": "SADD myset \"Another\"",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    }
+  },
+  "SsIsMember": {
+    "TS33": {
+      "remark": "向myset集合中加入成员”one”，输出1表示加入成功查找myset集合中是否存在成员”one”，输出1表示存在查找myset集合中是否存在成员”two”，输出0表示不存在",
+      "commands": [
+        {
+          "command": "SADD myset \"one\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "SISMEMBER myset \"one\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "SISMEMBER myset \"two\"",
+          "expected_output": "(integer) 0"
+        }
+      ]
+    },
+    "TS34": {
+      "remark": "Another test case",
+      "commands": [
+        {
+          "command": "SADD myset \"Another\"",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    },
+    "TS35": {
+      "remark": "Another test case",
+      "commands": [
+        {
+          "command": "SADD myset \"Another\"",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    }
+  }
+}

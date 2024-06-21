@@ -4,25 +4,45 @@
       <Sidebar />
     </el-aside>
     <el-main>
-      <div>Total Test Cases: {{ totalTestCases }}</div>
+      <el-card style="display: flex; flex-wrap: wrap">
+        <div>
+          <h1 style="display: inline-block">总体测试情况</h1>
+          <el-button
+            style="margin-left: 50px; display: inline-block; background-color: #000000; color: #ffffff"
+            @click="executeAllTestCases"
+          >
+            执行所有测试用例
+          </el-button>
+        </div>
+        <div v-for="(dataset, index) in Object.keys(testCasesData)" :key="index" style="margin: 20px; display: inline-block">
+          <h3>{{ dataset }} 相关函数</h3>
+          <div style="height: 200px; width: 200px; display: inline-block">
+            <PieChartComponent :chart-data="getPassRateData(dataset)" />
+            <div style="vertical-align: top; margin-left: 20px">
+              <h3>测试用例总数: {{ getTotalTestCases(dataset) }}</h3>
+            </div>
+            <div style="vertical-align: top; margin-left: 20px">
+              <h3>总通过率: {{ getOverallPassRate(dataset) }}%</h3>
+            </div>
+          </div>
+        </div>
+      </el-card>
 
-      <div>
-        <button @click="executeAllTestCases">Execute Test Cases</button>
-      </div>
-
-      <div style="height: 200px; width: 200px; display: inline-block">
-        <PieChartComponent :chart-data="passRateData" />
-      </div>
-      <div style="display: inline-block; vertical-align: top; margin-left: 20px">
-        <h3>Overall Pass Rate: {{ overallPassRate }}%</h3>
-      </div>
-
-      <div style="height: 200px; width: 200px; display: inline-block">
-        <LineChartComponent :chart-data="commandStatsData" />
-      </div>
-      <div>
-        <h1>Test Cases</h1>
-        <el-select v-model="selectedCommand" placeholder="Select Command" style="margin-bottom: 20px">
+      <el-card style="margin-top: 20px">
+        <h1>测试用例详情</h1>
+        <el-select
+          v-model="selectedDataset"
+          placeholder="Select Dataset"
+          style="margin-bottom: 20px; width: 200px; display: inline-block"
+          @change="clearCommandSelection"
+        >
+          <el-option v-for="(dataset, index) in Object.keys(testCasesData)" :key="index" :label="dataset" :value="dataset" />
+        </el-select>
+        <el-select
+          v-model="selectedCommand"
+          placeholder="Select Command"
+          style="margin-bottom: 20px; width: 200px; display: inline-block"
+        >
           <el-option v-for="command in commandOptions" :key="command" :label="command" :value="command" />
         </el-select>
 
@@ -40,7 +60,7 @@
           <el-table-column prop="result" label="Result" />
           <el-table-column prop="isPass" label="Pass/Fail" />
         </el-table>
-      </div>
+      </el-card>
     </el-main>
   </el-container>
 </template>
@@ -49,32 +69,36 @@
 import axios from 'axios'
 import Sidebar from '../components/Sidebar.vue'
 import PieChartComponent from '../components/PieChart.vue'
-import LineChartComponent from '../components/LineChart.vue'
 
 export default {
   components: {
     Sidebar,
     PieChartComponent,
-    LineChartComponent,
   },
   data() {
     return {
-      testCasesData: {},
+      testCasesData: {
+        string: {},
+        list: {},
+        set: {},
+        'sorted-set': {},
+      },
       selectedCommand: null,
+      selectedDataset: 'set', // 默认选择 set
       testCaseResults: [], // 用于存储测试用例的结果
       allTestCases: [], // 用于存储所有的测试用例及其执行情况
     }
   },
   computed: {
     commandOptions() {
-      return Object.keys(this.testCasesData)
+      return Object.keys(this.testCasesData[this.selectedDataset])
     },
     flattenedTestCases() {
       if (!this.selectedCommand) {
         return []
       }
 
-      const testCases = this.testCasesData[this.selectedCommand]
+      const testCases = this.testCasesData[this.selectedDataset][this.selectedCommand]
       const flattenedResult = []
 
       Object.keys(testCases).forEach((testCaseKey) => {
@@ -103,23 +127,26 @@ export default {
     allTestCasesComputed() {
       const testCases = []
 
-      Object.keys(this.testCasesData).forEach((command) => {
-        const commandTestCases = this.testCasesData[command]
+      Object.keys(this.testCasesData).forEach((dataset) => {
+        Object.keys(this.testCasesData[dataset]).forEach((command) => {
+          const commandTestCases = this.testCasesData[dataset][command]
 
-        Object.keys(commandTestCases).forEach((testCaseKey) => {
-          const testCase = commandTestCases[testCaseKey]
-          const commands = testCase.commands.map((cmd) => ({
-            command: cmd.command,
-            expected_output: cmd.expected_output,
-            result: null,
-            isPass: null,
-          }))
+          Object.keys(commandTestCases).forEach((testCaseKey) => {
+            const testCase = commandTestCases[testCaseKey]
+            const commands = testCase.commands.map((cmd) => ({
+              command: cmd.command,
+              expected_output: cmd.expected_output,
+              result: null,
+              isPass: null,
+            }))
 
-          testCases.push({
-            testCaseKey,
-            remark: testCase.remark,
-            commands,
-            isPass: null,
+            testCases.push({
+              dataset,
+              testCaseKey,
+              remark: testCase.remark,
+              commands,
+              isPass: null,
+            })
           })
         })
       })
@@ -146,18 +173,16 @@ export default {
     commandStats() {
       const stats = {}
 
-      // Iterate through each command in the test cases data
-      Object.keys(this.testCasesData).forEach((command) => {
-        const testCases = this.testCasesData[command]
+      Object.keys(this.testCasesData[this.selectedDataset]).forEach((command) => {
+        const testCases = this.testCasesData[this.selectedDataset][command]
         let passCount = 0
         let totalCases = 0
 
-        // Iterate through each test case for the command
         Object.keys(testCases).forEach((testCaseKey) => {
-          // Find the corresponding test case in the allTestCases array
-          const testCaseResult = this.allTestCases.find((result) => result.testCaseKey === testCaseKey)
+          const testCaseResult = this.allTestCases.find(
+            (result) => result.testCaseKey === testCaseKey && result.dataset === this.selectedDataset,
+          )
 
-          // If the test case exists and all its commands passed, increment the pass count
           if (testCaseResult && testCaseResult.isPass === 'Pass') {
             passCount += 1
           }
@@ -167,7 +192,6 @@ export default {
 
         const passRate = (passCount / totalCases) * 100
 
-        // Add the command statistics to the stats object
         stats[command] = {
           command,
           total: totalCases,
@@ -177,22 +201,6 @@ export default {
 
       return Object.values(stats)
     },
-    commandStatsData() {
-      const labels = this.commandStats.map((stat) => stat.command)
-      const data = this.commandStats.map((stat) => stat.passRate)
-
-      return {
-        labels,
-        datasets: [
-          {
-            label: 'Pass Rate (%)',
-            data,
-            borderColor: '#42b983',
-            backgroundColor: 'rgba(66, 185, 131, 0.2)',
-          },
-        ],
-      }
-    },
     overallPassRate() {
       const passCount = this.allTestCases.filter((testCase) => testCase.isPass === 'Pass').length
       const totalCount = this.allTestCases.length
@@ -200,15 +208,21 @@ export default {
     },
   },
   created() {
-    fetch('/test-cases.json')
-      .then((response) => {
+    const datasets = ['string', 'list', 'set', 'sorted-set']
+    const promises = datasets.map((dataset) =>
+      fetch(`/${dataset}-cases.json`).then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
         return response.json()
-      })
+      }),
+    )
+
+    Promise.all(promises)
       .then((data) => {
-        this.testCasesData = data
+        datasets.forEach((dataset, index) => {
+          this.testCasesData[dataset] = data[index]
+        })
         this.allTestCases = this.allTestCasesComputed
       })
       .catch((error) => {
@@ -276,7 +290,6 @@ export default {
     },
 
     async executeAllTestCases() {
-      const results = [] // 用于存储执行结果
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
           // const result = await this.executeCommand(command.command)
@@ -289,21 +302,49 @@ export default {
         testCase.isPass = testCase.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'
       }
 
-      // 更新测试结果
-      this.testCaseResults = results
-
       // 强制更新通过率和命令统计数据
       this.updateCharts()
     },
 
     updateCharts() {
-      this.overallPassRate = { ...this.overallPassRate }
-      this.passRateData = { ...this.passRateData } // 创建一个新的对象来强制更新
-      this.commandStatsData = { ...this.commandStatsData } // 创建一个新的对象来强制更新
+      this.$forceUpdate() // 强制组件重新渲染
+    },
+
+    clearCommandSelection() {
+      this.selectedCommand = null
+    },
+
+    getPassRateData(dataset) {
+      const datasetTestCases = this.allTestCases.filter((testCase) => testCase.dataset === dataset)
+      const passCount = datasetTestCases.filter((testCase) => testCase.isPass === 'Pass').length
+      const failCount = datasetTestCases.length - passCount
+
+      return {
+        labels: ['Pass', 'Fail'],
+        datasets: [
+          {
+            data: [passCount, failCount],
+            backgroundColor: ['#42b983', '#ff6384'],
+          },
+        ],
+      }
+    },
+
+    getTotalTestCases(dataset) {
+      return this.allTestCases.filter((testCase) => testCase.dataset === dataset).length
+    },
+
+    getOverallPassRate(dataset) {
+      const datasetTestCases = this.allTestCases.filter((testCase) => testCase.dataset === dataset)
+      const passCount = datasetTestCases.filter((testCase) => testCase.isPass === 'Pass').length
+      const totalCount = datasetTestCases.length
+      return totalCount > 0 ? ((passCount / totalCount) * 100).toFixed(2) : '0.00'
     },
 
     getTestCaseResult(testCaseKey, command) {
-      const testCase = this.allTestCases.find((testCase) => testCase.testCaseKey === testCaseKey)
+      const testCase = this.allTestCases.find(
+        (testCase) => testCase.testCaseKey === testCaseKey && testCase.dataset === this.selectedDataset,
+      )
       const commandResult = testCase?.commands.find((cmd) => cmd.command === command)
       return commandResult ? commandResult.result : null
     },
