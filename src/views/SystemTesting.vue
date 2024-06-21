@@ -3,9 +3,7 @@
     <el-aside width="200px">
       <Sidebar />
     </el-aside>
-    <el-main>
-      系统测试
-    </el-main>
+    <el-main> 系统测试 </el-main>
   </el-container>
 </template>
 
@@ -19,6 +17,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

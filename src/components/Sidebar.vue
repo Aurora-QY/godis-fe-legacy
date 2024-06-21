@@ -1,10 +1,8 @@
 <template>
   <div class="sidebar">
     <div class="sidebar-header">
-      <div class="project-name">
-        Godis
-      </div>
-      <img src="/public/godis-logo.png" alt="项目Logo" class="logo">
+      <div class="project-name">Godis</div>
+      <img src="/public/godis-logo.png" alt="项目Logo" class="logo" />
     </div>
     <!-- <el-menu default-active="1" class="el-menu-vertical-demo">
       <el-menu-item index="1">
@@ -27,9 +25,7 @@
           </template>
         </el-option>
       </el-select>
-      <el-button type="primary" :icon="Plus" class="add-server-button" @click="openAddServerDialog">
-        添加服务器
-      </el-button>
+      <el-button type="primary" :icon="Plus" class="add-server-button" @click="openAddServerDialog"> 添加服务器 </el-button>
     </div>
     <el-dialog v-model="addServerDialogVisible" title="添加服务器">
       <el-form :model="newServer">
@@ -45,28 +41,17 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="addServerDialogVisible = false">
-            取消
-          </el-button>
-          <el-button type="primary" @click="addServer">
-            添加
-          </el-button>
+          <el-button @click="addServerDialogVisible = false"> 取消 </el-button>
+          <el-button type="primary" @click="addServer"> 添加 </el-button>
         </div>
       </template>
     </el-dialog>
     <el-menu class="menubar">
-      <el-menu-item @click="navigateTo('/')">
-        首页
-      </el-menu-item>
-      <el-menu-item @click="navigateTo('/UnitTesting')">
-        单元测试
-      </el-menu-item>
-      <el-menu-item @click="navigateTo('/IntegrationTesting')">
-        集成测试
-      </el-menu-item>
-      <el-menu-item @click="navigateTo('/SystemTesting')">
-        系统测试
-      </el-menu-item>
+      <el-menu-item @click="navigateTo('/')"> 首页 </el-menu-item>
+      <el-menu-item @click="navigateTo('/UnitTesting')"> 单元测试 </el-menu-item>
+      <el-menu-item @click="navigateTo('/IntegrationTesting')"> 集成测试 </el-menu-item>
+      <el-menu-item @click="navigateTo('/SystemTesting')"> 系统测试 </el-menu-item>
+      <el-menu-item @click="navigateTo('/StressTesting')"> 压力测试 </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -108,7 +93,7 @@ function addServer() {
 }
 
 function removeServer(label) {
-  servers.value = servers.value.filter(server => server.label !== label)
+  servers.value = servers.value.filter((server) => server.label !== label)
   persistServers()
   ElMessage({
     message: '服务器删除成功',
@@ -117,7 +102,7 @@ function removeServer(label) {
 }
 
 function onServerChange() {
-  const changedServer = servers.value.filter(server => server.label === selectedServer.value)[0]
+  const changedServer = servers.value.filter((server) => server.label === selectedServer.value)[0]
   // console.log(changedServer)
   // 向后端发送请求
   axios
@@ -222,8 +207,8 @@ onMounted(() => {
 .dialog-footer {
   text-align: right;
 }
-.menubar{
-  margin-top:20px;
-  width:90%;
+.menubar {
+  margin-top: 20px;
+  width: 90%;
 }
 </style>
