@@ -13,6 +13,9 @@
       <div style="height: 200px; width: 200px; display: inline-block">
         <PieChartComponent :chart-data="passRateData" />
       </div>
+      <div style="display: inline-block; vertical-align: top; margin-left: 20px">
+        <h3>Overall Pass Rate: {{ overallPassRate }}%</h3>
+      </div>
 
       <div style="height: 200px; width: 200px; display: inline-block">
         <LineChartComponent :chart-data="commandStatsData" />
@@ -43,7 +46,6 @@
 </template>
 
 <script>
-/* eslint-disable no-console */
 import axios from 'axios'
 import Sidebar from '../components/Sidebar.vue'
 import PieChartComponent from '../components/PieChart.vue'
@@ -59,7 +61,8 @@ export default {
     return {
       testCasesData: {},
       selectedCommand: null,
-      testCaseResults: [], // 新增一个数组来存储测试用例的结果
+      testCaseResults: [], // 用于存储测试用例的结果
+      allTestCases: [], // 用于存储所有的测试用例及其执行情况
     }
   },
   computed: {
@@ -90,23 +93,45 @@ export default {
             isPass: isPass !== null ? isPass : '', // 若isPass为null则显示为空
             index,
             totalCommands: testCase.commands.length,
-            executed: result !== null, // 添加一个标志位,表示是否已经执行过
+            executed: result !== null, // 添加一个标志位，表示是否已经执行过
           })
         })
       })
 
       return flattenedResult
     },
-    totalTestCases() {
-      let total = 0
+    allTestCasesComputed() {
+      const testCases = []
+
       Object.keys(this.testCasesData).forEach((command) => {
-        total += Object.keys(this.testCasesData[command]).length
+        const commandTestCases = this.testCasesData[command]
+
+        Object.keys(commandTestCases).forEach((testCaseKey) => {
+          const testCase = commandTestCases[testCaseKey]
+          const commands = testCase.commands.map((cmd) => ({
+            command: cmd.command,
+            expected_output: cmd.expected_output,
+            result: null,
+            isPass: null,
+          }))
+
+          testCases.push({
+            testCaseKey,
+            remark: testCase.remark,
+            commands,
+            isPass: null,
+          })
+        })
       })
-      return total
+
+      return testCases
+    },
+    totalTestCases() {
+      return this.allTestCasesComputed.length
     },
     passRateData() {
-      const passCount = this.flattenedTestCases.filter((testCase) => testCase.isPass === 'Pass').length
-      const failCount = this.flattenedTestCases.length - passCount
+      const passCount = this.allTestCases.filter((testCase) => testCase.isPass === 'Pass').length
+      const failCount = this.allTestCases.length - passCount
 
       return {
         labels: ['Pass', 'Fail'],
@@ -121,27 +146,28 @@ export default {
     commandStats() {
       const stats = {}
 
+      // Iterate through each command in the test cases data
       Object.keys(this.testCasesData).forEach((command) => {
         const testCases = this.testCasesData[command]
         let passCount = 0
         let totalCases = 0
 
+        // Iterate through each test case for the command
         Object.keys(testCases).forEach((testCaseKey) => {
-          const testCase = testCases[testCaseKey]
-          const allCommandsPassed = testCase.commands.every((cmd) => {
-            const testCaseResult = this.flattenedTestCases.find(
-              (flatTestCase) => flatTestCase.testCaseKey === testCaseKey && flatTestCase.command === cmd.command.trim(),
-            )
-            return testCaseResult && testCaseResult.isPass === 'Pass'
-          })
-          if (allCommandsPassed) {
+          // Find the corresponding test case in the allTestCases array
+          const testCaseResult = this.allTestCases.find((result) => result.testCaseKey === testCaseKey)
+
+          // If the test case exists and all its commands passed, increment the pass count
+          if (testCaseResult && testCaseResult.isPass === 'Pass') {
             passCount += 1
           }
+
           totalCases += 1
         })
 
         const passRate = (passCount / totalCases) * 100
 
+        // Add the command statistics to the stats object
         stats[command] = {
           command,
           total: totalCases,
@@ -167,6 +193,11 @@ export default {
         ],
       }
     },
+    overallPassRate() {
+      const passCount = this.allTestCases.filter((testCase) => testCase.isPass === 'Pass').length
+      const totalCount = this.allTestCases.length
+      return totalCount > 0 ? ((passCount / totalCount) * 100).toFixed(2) : '0.00'
+    },
   },
   created() {
     fetch('/test-cases.json')
@@ -178,6 +209,7 @@ export default {
       })
       .then((data) => {
         this.testCasesData = data
+        this.allTestCases = this.allTestCasesComputed
       })
       .catch((error) => {
         console.error('Error fetching test cases:', error)
@@ -244,22 +276,17 @@ export default {
     },
 
     async executeAllTestCases() {
-      console.log('test')
       const results = [] // 用于存储执行结果
-      for (const testCase of this.flattenedTestCases) {
-        if (!testCase.executed) {
-          console.log(testCase.command)
-          // const result = await this.executeCommand(testCase.command)
+      for (const testCase of this.allTestCases) {
+        for (const command of testCase.commands) {
+          // const result = await this.executeCommand(command.command)
           const result = '(integer) 1'
-          const expectedOutput = testCase.expected_output
+          const expectedOutput = command.expected_output
           const isPass = result === expectedOutput
-          results.push({
-            testCaseKey: testCase.testCaseKey,
-            command: testCase.command,
-            result,
-            isPass: isPass ? 'Pass' : 'Fail',
-          })
+          command.result = result
+          command.isPass = isPass ? 'Pass' : 'Fail'
         }
+        testCase.isPass = testCase.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'
       }
 
       // 更新测试结果
@@ -270,13 +297,15 @@ export default {
     },
 
     updateCharts() {
+      this.overallPassRate = { ...this.overallPassRate }
       this.passRateData = { ...this.passRateData } // 创建一个新的对象来强制更新
       this.commandStatsData = { ...this.commandStatsData } // 创建一个新的对象来强制更新
     },
 
     getTestCaseResult(testCaseKey, command) {
-      const result = this.testCaseResults.find((result) => result.testCaseKey === testCaseKey && result.command === command)
-      return result ? result.result : null
+      const testCase = this.allTestCases.find((testCase) => testCase.testCaseKey === testCaseKey)
+      const commandResult = testCase?.commands.find((cmd) => cmd.command === command)
+      return commandResult ? commandResult.result : null
     },
   },
 }
