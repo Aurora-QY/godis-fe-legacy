@@ -1,6 +1,6 @@
 {
-  "SAdd": {
-    "TS1": {
+  "List1": {
+    "TS11": {
       "remark": "向myset集合中加入成员”Hello”，输出1表示加入成功向myset集合中加入成员”World”，输出1表示加入成功向myset集合中加入成员”World”，输出0表示加入失败（因为此元素已存在）查看myset集合中的所有成员",
       "commands": [
         {
@@ -17,14 +17,11 @@
         },
         {
           "command": "SMEMBERS myset",
-          "expected_output": [
-            "1) \"Hello\"",
-            "2) \"World\""
-          ]
+          "expected_output": ["1) \"Hello\"", "2) \"World\""]
         }
       ]
     },
-    "TS2": {
+    "TS12": {
       "remark": "Another test case",
       "commands": [
         {
@@ -34,8 +31,8 @@
       ]
     }
   },
-  "SIsMember": {
-    "TS1": {
+  "list2": {
+    "TS13": {
       "remark": "向myset集合中加入成员”one”，输出1表示加入成功查找myset集合中是否存在成员”one”，输出1表示存在查找myset集合中是否存在成员”two”，输出0表示不存在",
       "commands": [
         {
@@ -52,7 +49,7 @@
         }
       ]
     },
-    "TS2": {
+    "TS14": {
       "remark": "Another test case",
       "commands": [
         {
@@ -61,7 +58,16 @@
         }
       ]
     },
-    "TS3": {
+    "TS15": {
+      "remark": "Another test case",
+      "commands": [
+        {
+          "command": "SADD myset \"Another\"",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    },
+    "TS16": {
       "remark": "Another test case",
       "commands": [
         {
