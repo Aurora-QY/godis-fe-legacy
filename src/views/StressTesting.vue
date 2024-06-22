@@ -4,7 +4,7 @@
       <Sidebar />
     </el-aside>
     <el-main>
-      <h2>系统测试</h2>
+      <h2>压力测试</h2>
       <el-button type="primary" :disabled="isTestRunning" @click="startStressTest"> 开始压力测试 </el-button>
       <el-button type="danger" :disabled="!isTestRunning" @click="stopStressTest"> 停止压力测试 </el-button>
       <el-card v-if="testStatus" class="result-card">

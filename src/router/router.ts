@@ -5,6 +5,7 @@ import UnitTesting from '../views/UnitTesting.vue'
 import IntegrationTesting from '../views/IntegrationTesting.vue'
 import SystemTesting from '../views/SystemTesting.vue'
 import StressTesting from '../views/StressTesting.vue'
+import PersistenceTesing from '../views/PersistenceTesting.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -12,6 +13,7 @@ const routes = [
   { path: '/IntegrationTesting', component: IntegrationTesting },
   { path: '/SystemTesting', component: SystemTesting },
   { path: '/StressTesting', component: StressTesting },
+  { path: '/PersistenceTesting', component: PersistenceTesing },
 ]
 
 const router = createRouter({

@@ -52,6 +52,7 @@
       <el-menu-item @click="navigateTo('/IntegrationTesting')"> 集成测试 </el-menu-item>
       <el-menu-item @click="navigateTo('/SystemTesting')"> 系统测试 </el-menu-item>
       <el-menu-item @click="navigateTo('/StressTesting')"> 压力测试 </el-menu-item>
+      <el-menu-item @click="navigateTo('/PersistenceTesting')"> 可靠性测试 </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -207,6 +208,7 @@ onMounted(() => {
 .dialog-footer {
   text-align: right;
 }
+
 .menubar {
   margin-top: 20px;
   width: 90%;
