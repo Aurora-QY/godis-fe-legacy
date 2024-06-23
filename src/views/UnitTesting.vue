@@ -292,11 +292,15 @@ export default {
     async executeAllTestCases() {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
-          // const result = await this.executeCommand(command.command)
-          const result = '(integer) 1'
+          const result = await this.executeCommand(command.command)
+          // const result = '(integer) 1'
           const expectedOutput = command.expected_output
-          const isPass = result === expectedOutput
-          command.result = result
+          // console.log(typeof result, typeof expectedOutput)
+          // console.log("command: " + command.command)
+          // console.log("expectedOutput: ", expectedOutput)
+          // console.log("result: ", result)
+          const isPass = String(result) === String(expectedOutput)
+          command.result = String(result)
           command.isPass = isPass ? 'Pass' : 'Fail'
         }
         testCase.isPass = testCase.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'

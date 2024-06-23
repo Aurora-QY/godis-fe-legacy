@@ -1,69 +1,131 @@
 {
-  "SAdd": {
+  "SADD": {
     "TS1": {
-      "remark": "向myset集合中加入成员”Hello”，输出1表示加入成功向myset集合中加入成员”World”，输出1表示加入成功向myset集合中加入成员”World”，输出0表示加入失败（因为此元素已存在）查看myset集合中的所有成员",
+      "remark": "SADD指令：用于向集合中添加一个或多个成员。如果指定的成员已经存在于集合中，则忽略该成员。该命令确保集合中的所有成员都是唯一的。本用例：向SAdd_TestSet集合中依次加入元素SAdd_Test1和元素SAdd_Test2，重复加入元素SAdd_Test1，最后使用SMEMBERS查看成员加入情况",
       "commands": [
         {
-          "command": "SADD myset \"Hello\"",
-          "expected_output": "(integer) 1"
+          "command": "SADD SAdd_TestSet \"SAdd_Test1\"",
+          "expected_output": "1"
         },
         {
-          "command": "SADD myset \"World\"",
-          "expected_output": "(integer) 1"
+          "command": "SADD SAdd_TestSet \"SAdd_Test2\"",
+          "expected_output": "1"
         },
         {
-          "command": "SADD myset \"World\"",
-          "expected_output": "(integer) 0"
+          "command": "SADD SAdd_TestSet \"SAdd_Test1\"",
+          "expected_output": "0"
         },
         {
-          "command": "SMEMBERS myset",
-          "expected_output": ["1) \"Hello\"", "2) \"World\""]
-        }
-      ]
-    },
-    "TS2": {
-      "remark": "Another test case",
-      "commands": [
-        {
-          "command": "SADD myset \"Another\"",
-          "expected_output": "(integer) 1"
+          "command": "SMEMBERS SAdd_TestSet",
+          "expected_output": ["1) \"SAdd_Test1\"", "2) \"SAdd_Test2\""]
         }
       ]
     }
   },
+
   "SIsMember": {
-    "TS3": {
-      "remark": "向myset集合中加入成员”one”，输出1表示加入成功查找myset集合中是否存在成员”one”，输出1表示存在查找myset集合中是否存在成员”two”，输出0表示不存在",
+    "TS2": {
+      "remark": "SIsMember指令：用于检查指定的成员是否在集合中。如果成员存在，则返回true；否则返回false。该命令常用于验证集合中是否包含某个特定元素。本用例：向SIsMember_TestSet集合中加入元素SIsMember_Test1，然后使用SIsMember查看集合中是否存在该元素，再查看集合中是否存在未被加入的元素SIsMember_Test2",
       "commands": [
         {
-          "command": "SADD myset \"one\"",
-          "expected_output": "(integer) 1"
+          "command": "SADD SIsMember_TestSet \"SIsMember_Test1\"",
+          "expected_output": "1"
         },
         {
-          "command": "SISMEMBER myset \"one\"",
-          "expected_output": "(integer) 1"
+          "command": "SISMEMBER SIsMember_TestSet \"SIsMember_Test1\"",
+          "expected_output": "1"
         },
         {
-          "command": "SISMEMBER myset \"two\"",
-          "expected_output": "(integer) 0"
+          "command": "SISMEMBER SIsMember_TestSet \"SIsMember_Test2\"",
+          "expected_output": "0"
+        }
+      ]
+    }
+  },
+
+  "SMembers": {
+    "TS3": {
+      "remark": "SMembers指令：用于返回集合中的所有成员。该命令检索并返回集合中的所有元素，结果无特定顺序。本用例：向SMembers_TestSet1集合中加入成员SMembers_Test1和SMembers_Test2，然后使用SMEMBERS指令查询该集合中的全部成员",
+      "commands": [
+        {
+          "command": "SADD SMembers_TestSet1 \"SMembers_Test1\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SADD SMembers_TestSet1 \"SMembers_Test2\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SMEMBERS SMembers_TestSet1",
+          "expected_output": ["1) \"SMembers_Test1\"", "2) \"SMembers_Test2\""]
         }
       ]
     },
     "TS4": {
-      "remark": "Another test case",
+      "remark": "SMembers指令：用于返回集合中的所有成员。该命令检索并返回集合中的所有元素，结果无特定顺序。本用例：查询集合SMembers_TestSet2中的全部成员，由于未加入过任何成员，所以应返回(nil)",
       "commands": [
         {
-          "command": "SADD myset \"Another\"",
-          "expected_output": "(integer) 1"
+          "command": "SMEMBERS SMembers_TestSet2",
+          "expected_output": "(nil)"
+        }
+      ]
+    }
+  },
+  "SCard": {
+    "TS5": {
+      "remark": "SCard指令：返回集合中成员的数量。该命令用于快速获取集合的大小。本用例：向SCard_TestSet1集合中加入成员SCard_Test1和SCard_Test2，然后使用SCARD指令查询该集合中的成员个数",
+      "commands": [
+        {
+          "command": "SADD SCard_TestSet1 \"SCard_Test1\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SADD SCard_TestSet1 \"SCard_Test2\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SCARD SCard_TestSet1",
+          "expected_output": "2"
         }
       ]
     },
-    "TS5": {
-      "remark": "Another test case",
+    "TS6": {
+      "remark": "SCard指令：返回集合中成员的数量。该命令用于快速获取集合的大小。本用例：向使用SCARD指令查询SCard_TestSet2集合中的成员个数，由于未向此集合中加入过成员，所以返回0",
       "commands": [
         {
-          "command": "SADD myset \"Another\"",
-          "expected_output": "(integer) 1"
+          "command": "SCARD SCard_TestSet2",
+          "expected_output": "0"
+        }
+      ]
+    }
+  },
+  "SRem": {
+    "TS7": {
+      "remark": "SRem指令：用于移除集合中的一个或多个成员。如果指定的成员不存在于集合中，则忽略该成员。该命令用于维护集合的内容，确保只包含所需的成员。本用例：向集合SRem_TestSet中加入成员1、2、3，然后移除1、4，最后查看全部成员",
+      "commands": [
+        {
+          "command": "SADD SRem_TestSet \"SRem_Test1\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SADD SRem_TestSet \"SRem_Test2\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SADD SRem_TestSet \"SRem_Test3\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SREM SRem_TestSet \"SRem_Test1\"",
+          "expected_output": "1"
+        },
+        {
+          "command": "SREM SRem_TestSet \"SRem_Test4\"",
+          "expected_output": "0"
+        },
+        {
+          "command": "SMEMBERS SRem_TestSet",
+          "expected_output": ["1) \"SRem_Test2\"", "2) \"SRem_Test3\""]
         }
       ]
     }

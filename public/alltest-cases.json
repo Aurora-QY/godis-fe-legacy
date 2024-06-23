@@ -1,0 +1,270 @@
+{
+  "缓存": {
+    "TS01": {
+      "remark": "Web应用中缓存用户信息，减少数据库查询。",
+      "commands": [
+        {
+          "command": "SET user:1001 \"{name: 'Alice', age: 28}\" EX 3600",
+          "expected_output": "OK"
+        },
+        {
+          "command": "GET user:1001",
+          "expected_output": "\"{name: 'Alice', age: 28}\""
+        }
+      ]
+    }
+  },
+  "会话存储": {
+    "TS02": {
+      "remark": "存储用户的会话信息，包括登录状态和购物车内容。",
+      "commands": [
+        {
+          "command": "HMSET session:abc123 user_id 1001 login_time \"2023-06-22 10:00:00\" cart_items \"[1, 2, 3]\"",
+          "expected_output": "OK"
+        },
+        {
+          "command": "HGETALL session:abc123",
+          "expected_output": "1) \"user_id\"\n2) \"1001\"\n3) \"login_time\"\n4) \"2023-06-22 10:00:00\"\n5) \"cart_items\"\n6) \"[1, 2, 3]\""
+        }
+      ]
+    }
+  },
+  "排行榜和计数器": {
+    "TS03": {
+      "remark": "游戏应用中实现玩家积分排行榜。",
+      "commands": [
+        {
+          "command": "ZADD leaderboard 1000 \"player1\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZADD leaderboard 1200 \"player2\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZADD leaderboard 800 \"player3\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZREVRANGE leaderboard 0 2 WITHSCORES",
+          "expected_output": "1) \"player2\"\n2) \"1200\"\n3) \"player1\"\n4) \"1000\"\n5) \"player3\"\n6) \"800\""
+        }
+      ]
+    }
+  },
+  "消息队列": {
+    "TS04": {
+      "remark": "异步任务处理系统，如邮件发送和图像处理。",
+      "commands": [
+        {
+          "command": "LPUSH tasks \"send_email:user@example.com\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "LPUSH tasks \"process_image:photo1.jpg\"",
+          "expected_output": "(integer) 2"
+        },
+        {
+          "command": "RPOP tasks",
+          "expected_output": "\"send_email:user@example.com\""
+        }
+      ]
+    }
+  },
+  "实时分析": {
+    "TS05": {
+      "remark": "统计网站的每日页面访问量。",
+      "commands": [
+        {
+          "command": "INCR page_views",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "EXPIRE page_views 86400",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "GET page_views",
+          "expected_output": "\"1\""
+        }
+      ]
+    }
+  },
+  "分布式锁": {
+    "TS06": {
+      "remark": "在分布式系统中锁定共享资源，确保一致性。",
+      "commands": [
+        {
+          "command": "SET resource_lock \"1\" NX PX 10000",
+          "expected_output": "OK"
+        },
+        {
+          "command": "DEL resource_lock",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    }
+  },
+  "发布/订阅": {
+    "TS07": {
+      "remark": "实时新闻推送系统。",
+      "commands": [
+        {
+          "command": "SUBSCRIBE news_channel",
+          "expected_output": "1) \"subscribe\"\n2) \"news_channel\"\n3) (integer) 1"
+        },
+        {
+          "command": "PUBLISH news_channel \"Breaking news: Redis 7.0 released!\"",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    }
+  },
+  "限流": {
+    "TS08": {
+      "remark": "限制API的每分钟调用次数。",
+      "commands": [
+        {
+          "command": "INCR api_calls",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "EXPIRE api_calls 60",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "GET api_calls",
+          "expected_output": "\"1\""
+        }
+      ]
+    }
+  },
+  "数据过期": {
+    "TS09": {
+      "remark": "存储短期有效的验证码。",
+      "commands": [
+        {
+          "command": "SET temp_data \"some value\" EX 30",
+          "expected_output": "OK"
+        },
+        {
+          "command": "TTL temp_data",
+          "expected_output": "(integer) 30"
+        }
+      ]
+    }
+  },
+  "全页缓存": {
+    "TS10": {
+      "remark": "缓存整个网页内容，减少渲染时间。",
+      "commands": [
+        {
+          "command": "SET \"page:/home\" \"<html>...</html>\" EX 300",
+          "expected_output": "OK"
+        },
+        {
+          "command": "GET \"page:/home\"",
+          "expected_output": "\"<html>...</html>\""
+        }
+      ]
+    }
+  },
+  "社交功能": {
+    "TS11": {
+      "remark": "存储用户的好友关系。",
+      "commands": [
+        {
+          "command": "SADD friends:1001 1002 1003 1004",
+          "expected_output": "(integer) 3"
+        },
+        {
+          "command": "SISMEMBER friends:1001 1002",
+          "expected_output": "(integer) 1"
+        }
+      ]
+    }
+  },
+  "实时推荐系统": {
+    "TS12": {
+      "remark": "基于用户偏好的商品推荐系统。",
+      "commands": [
+        {
+          "command": "ZADD user:1001:preferences 5 \"category:electronics\" 3 \"category:books\"",
+          "expected_output": "(integer) 2"
+        },
+        {
+          "command": "ZREVRANGE user:1001:preferences 0 -1 WITHSCORES",
+          "expected_output": "1) \"category:electronics\"\n2) \"5\"\n3) \"category:books\"\n4) \"3\""
+        }
+      ]
+    }
+  },
+  "地理位置信息": {
+    "TS13": {
+      "remark": "计算两个城市之间的距离。",
+      "commands": [
+        {
+          "command": "GEOADD locations 13.361389 38.115556 \"Palermo\" 15.087269 37.502669 \"Catania\"",
+          "expected_output": "(integer) 2"
+        },
+        {
+          "command": "GEODIST locations Palermo Catania km",
+          "expected_output": "\"166.2742\""
+        }
+      ]
+    }
+  },
+  "时间序列数据": {
+    "TS14": {
+      "remark": "存储和查询温度传感器数据。",
+      "commands": [
+        {
+          "command": "ZADD sensor:temp 1687449600 25.5",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZADD sensor:temp 1687453200 26.2",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZRANGE sensor:temp 1687449600 1687453200 BYSCORE WITHSCORES",
+          "expected_output": "1) \"25.5\"\n2) \"1687449600\"\n3) \"26.2\"\n4) \"1687453200\""
+        }
+      ]
+    }
+  },
+  "任务调度": {
+    "TS15": {
+      "remark": "基于时间的任务调度系统。",
+      "commands": [
+        {
+          "command": "ZADD scheduled_tasks 1687500000 \"backup_database\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "ZRANGEBYSCORE scheduled_tasks 0 1687500000",
+          "expected_output": "1) \"backup_database\""
+        }
+      ]
+    }
+  },
+  "数据共享": {
+    "TS16": {
+      "remark": "在微服务架构中共享配置信息。",
+      "commands": [
+        {
+          "command": "HSET shared_config db_url \"mysql://...\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "HSET shared_config api_key \"abc123\"",
+          "expected_output": "(integer) 1"
+        },
+        {
+          "command": "HGETALL shared_config",
+          "expected_output": "1) \"db_url\"\n2) \"mysql://...\"\n3) \"api_key\"\n4) \"abc123\""
+        }
+      ]
+    }
+  }
+}
