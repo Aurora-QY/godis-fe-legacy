@@ -319,7 +319,7 @@ export default {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
           const res = await this.executeCommand(command.command)
-          result = {
+          const result = {
             result: res,
             alloc: 0,
             timeCost: 0,
