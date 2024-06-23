@@ -1,448 +1,468 @@
 {
   "SET": {
-    "decription": "{Set指令的用法、之类的}",
-    "TS27": {
-      "remark": "Set命令是最复杂的实现之一，它支持多种条件标志和过期时间选项。",
-      "commands": [
-        {
-          "command": "SET Set_TestKey1 \"Set_Test1\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GET Set_TestKey1",
-          "expected_output": "\"Set_Test1\""
-        }
-      ]
-    },
-    "TS28": {
-      "remark": "Set命令是最复杂的实现之一，它支持多种条件标志和过期时间选项。",
-      "commands": [
-        {
-          "command": "SET Set_TestKey2 \"will expire in a minute\" EX 60",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GET Set_TestKey2",
-          "expected_output": "(nil)"
-        }
-      ]
-    },
-    "TS29": {
-      "remark": "Set命令是最复杂的实现之一，它支持多种条件标志和过期时间选项。",
-      "commands": [
-        {
-          "command": "SET Set_TestKey3 \"Set_Test3\" NX",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GET Set_TestKey3",
-          "expected_output": "\"Set_Test3\""
-        }
-      ]
-    },
-    "TS30": {
-      "remark": "Set命令是最复杂的实现之一，它支持多种条件标志和过期时间选项。",
-      "commands": [
-        {
-          "command": "SET Set_TestKey4 \"4\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "SET Set_TestKey4 \"Set_Test4\" NX",
-          "expected_output": "(nil)"
-        },
-        {
-          "command": "GET Set_TestKey4",
-          "expected_output": "\"4\""
-        }
-      ]
+    "description": "设置字符串键值对",
+    "TestCases": {
+      "GDS_Sys_Test_String_001": {
+        "remark": "设置一个简单的字符串键值对并验证",
+        "commands": [
+          {
+            "command": "SET Set_TestKey1 \"Set_Test1\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GET Set_TestKey1",
+            "expected_output": "\"Set_Test1\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_002": {
+        "remark": "设置一个带有过期时间的字符串键值对",
+        "commands": [
+          {
+            "command": "SET Set_TestKey2 \"will expire in a minute\" EX 60",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GET Set_TestKey2",
+            "expected_output": "(nil)"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_003": {
+        "remark": "使用NX选项设置一个不存在的键",
+        "commands": [
+          {
+            "command": "SET Set_TestKey3 \"Set_Test3\" NX",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GET Set_TestKey3",
+            "expected_output": "\"Set_Test3\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_004": {
+        "remark": "使用NX选项尝试设置一个已存在的键",
+        "commands": [
+          {
+            "command": "SET Set_TestKey4 \"4\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "SET Set_TestKey4 \"Set_Test4\" NX",
+            "expected_output": "(nil)"
+          },
+          {
+            "command": "GET Set_TestKey4",
+            "expected_output": "\"4\""
+          }
+        ]
+      }
     }
   },
   "GET": {
-    "TS31": {
-      "remark": "Get命令实现相对简单，主要用于检索与给定键关联的值。",
-      "commands": [
-        {
-          "command": "SET Get_TestKey1 \"Get_Test1\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GET Get_TestKey1",
-          "expected_output": "\"Get_Test1\""
-        }
-      ]
-    },
-    "TS32": {
-      "remark": "Get命令实现相对简单，主要用于检索与给定键关联的值。",
-      "commands": [
-        {
-          "command": "GET Get_TestKey2",
-          "expected_output": "(nil)"
-        }
-      ]
+    "description": "获取字符串键的值",
+    "TestCases": {
+      "GDS_Sys_Test_String_005": {
+        "remark": "获取一个存在的键的值",
+        "commands": [
+          {
+            "command": "SET Get_TestKey1 \"Get_Test1\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GET Get_TestKey1",
+            "expected_output": "\"Get_Test1\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_006": {
+        "remark": "尝试获取一个不存在的键的值",
+        "commands": [
+          {
+            "command": "GET Get_TestKey2",
+            "expected_output": "(nil)"
+          }
+        ]
+      }
     }
   },
   "GETRANGE": {
-    "TS33": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey1 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey1 0 3",
-          "expected_output": "\"This\""
-        }
-      ]
-    },
-    "TS34": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey2 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey2 -3 -1",
-          "expected_output": "\"ing\""
-        }
-      ]
-    },
-    "TS35": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey3 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey3 0 -1",
-          "expected_output": "\"This is a string\""
-        }
-      ]
-    },
-    "TS36": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey4 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey4 10 100",
-          "expected_output": "\"string\""
-        }
-      ]
-    },
-    "TS37": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey5 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey5 6 1",
-          "expected_output": "\"\""
-        }
-      ]
-    },
-    "TS38": {
-      "remark": "GETRANGE命令用于获取字符串中指定索引范围的子串。",
-      "commands": [
-        {
-          "command": "SET GetRange_TestKey6 \"This is a string\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETRANGE GetRange_TestKey6 -2 -7",
-          "expected_output": "\"\""
-        }
-      ]
+    "description": "获取字符串键的子串",
+    "TestCases": {
+      "GDS_Sys_Test_String_007": {
+        "remark": "获取字符串的前四个字符",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey1 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey1 0 3",
+            "expected_output": "\"This\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_008": {
+        "remark": "获取字符串的最后三个字符",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey2 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey2 -3 -1",
+            "expected_output": "\"ing\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_009": {
+        "remark": "获取整个字符串",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey3 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey3 0 -1",
+            "expected_output": "\"This is a string\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_010": {
+        "remark": "获取超出字符串长度的范围",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey4 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey4 10 100",
+            "expected_output": "\"string\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_011": {
+        "remark": "获取一个无效范围（开始索引大于结束索引）",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey5 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey5 6 1",
+            "expected_output": "\"\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_012": {
+        "remark": "获取一个无效的负数范围",
+        "commands": [
+          {
+            "command": "SET GetRange_TestKey6 \"This is a string\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETRANGE GetRange_TestKey6 -2 -7",
+            "expected_output": "\"\""
+          }
+        ]
+      }
     }
   },
   "GETDEL": {
-    "TS39": {
-      "remark": "GETDEL命令用于获取字符串变量的键值并删除该键。原子操作保证获取后立即删除。",
-      "commands": [
-        {
-          "command": "SET GetDel_TestKey1 \"GetDel_Test1\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "GETDEL GetDel_TestKey1",
-          "expected_output": "\"GetDel_Test1\""
-        },
-        {
-          "command": "GET GetDel_TestKey1",
-          "expected_output": "(nil)"
-        }
-      ]
-    },
-    "TS40": {
-      "remark": "GETDEL命令用于获取字符串变量的键值并删除该键。原子操作保证获取后立即删除。",
-      "commands": [
-        {
-          "command": "GETDEL GetDel_TestKey2",
-          "expected_output": "(nil)"
-        }
-      ]
+    "description": "获取字符串键的值并删除该键",
+    "TestCases": {
+      "GDS_Sys_Test_String_013": {
+        "remark": "获取一个存在的键的值并删除该键",
+        "commands": [
+          {
+            "command": "SET GetDel_TestKey1 \"GetDel_Test1\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "GETDEL GetDel_TestKey1",
+            "expected_output": "\"GetDel_Test1\""
+          },
+          {
+            "command": "GET GetDel_TestKey1",
+            "expected_output": "(nil)"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_014": {
+        "remark": "尝试获取并删除一个不存在的键",
+        "commands": [
+          {
+            "command": "GETDEL GetDel_TestKey2",
+            "expected_output": "(nil)"
+          }
+        ]
+      }
     }
   },
   "APPEND": {
-    "TS41": {
-      "remark": "APPEND命令用于将字符串追加到已有字符串的末尾或创建新的字符串。",
-      "commands": [
-        {
-          "command": "EXISTS Append_TestKey",
-          "expected_output": "0"
-        },
-        {
-          "command": "APPEND Append_TestKey \"Hello\"",
-          "expected_output": "5"
-        },
-        {
-          "command": "GET Append_TestKey",
-          "expected_output": "\"Hello\""
-        },
-        {
-          "command": "APPEND Append_TestKey \" World\"",
-          "expected_output": "(11"
-        },
-        {
-          "command": "GET Append_TestKey",
-          "expected_output": "\"Hello World\""
-        }
-      ]
+    "description": "将字符串追加到已有字符串的末尾或创建新的字符串",
+    "TestCases": {
+      "GDS_Sys_Test_String_015": {
+        "remark": "向不存在的键追加字符串，然后再次追加",
+        "commands": [
+          {
+            "command": "EXISTS Append_TestKey",
+            "expected_output": "0"
+          },
+          {
+            "command": "APPEND Append_TestKey \"Hello\"",
+            "expected_output": "5"
+          },
+          {
+            "command": "GET Append_TestKey",
+            "expected_output": "\"Hello\""
+          },
+          {
+            "command": "APPEND Append_TestKey \" World\"",
+            "expected_output": "(11"
+          },
+          {
+            "command": "GET Append_TestKey",
+            "expected_output": "\"Hello World\""
+          }
+        ]
+      }
     }
   },
   "Incr/Decr": {
-    "TS42": {
-      "remark": "INCR命令用于将键对应的值增加1；DECR命令用于将键对应的值减少1。",
-      "commands": [
-        {
-          "command": "SET Incr_TestKey1 \"10\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCR Incr_TestKey1",
-          "expected_output": "11"
-        },
-        {
-          "command": "GET Incr_TestKey1",
-          "expected_output": "\"11\""
-        }
-      ]
-    },
-    "TS43": {
-      "remark": "DECR命令用于将键对应的值减少1。",
-      "commands": [
-        {
-          "command": "SET Decr_TestKey1 \"7\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECR Decr_TestKey1",
-          "expected_output": "6"
-        },
-        {
-          "command": "GET Decr_TestKey1",
-          "expected_output": "\"6\""
-        }
-      ]
-    },
-    "TS44": {
-      "remark": "尝试在非数值型变量上使用INCR命令。",
-      "commands": [
-        {
-          "command": "SET Incr_TestKey2 \"Hello\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCR Incr_TestKey2",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS45": {
-      "remark": "尝试在非数值型变量上使用DECR命令。",
-      "commands": [
-        {
-          "command": "SET Decr_TestKey2 \"Hello\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECR Decr_TestKey2",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS46": {
-      "remark": "尝试在超出int可表示范围的数值上使用INCR命令。",
-      "commands": [
-        {
-          "command": "SET Incr_TestKey3 \"2147483649123\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCR Incr_TestKey3",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS47": {
-      "remark": "尝试在超出int可表示范围的数值上使用DECR命令。",
-      "commands": [
-        {
-          "command": "SET Decr_TestKey3 \"2147483649123\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECR Decr_TestKey3",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS48": {
-      "remark": "在未赋值的键上使用INCR命令。",
-      "commands": [
-        {
-          "command": "INCR Incr_TestKey4",
-          "expected_output": "(integer) 1"
-        },
-        {
-          "command": "GET Incr_TestKey4",
-          "expected_output": "\"1\""
-        }
-      ]
-    },
-    "TS49": {
-      "remark": "在未赋值的键上使用DECR命令。",
-      "commands": [
-        {
-          "command": "DECR Decr_TestKey4",
-          "expected_output": "-1"
-        },
-        {
-          "command": "GET Decr_TestKey4",
-          "expected_output": "\"-1\""
-        }
-      ]
+    "description": "将键对应的值增加或减少1",
+    "TestCases": {
+      "GDS_Sys_Test_String_016": {
+        "remark": "对数值型字符串使用INCR命令",
+        "commands": [
+          {
+            "command": "SET Incr_TestKey1 \"10\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCR Incr_TestKey1",
+            "expected_output": "11"
+          },
+          {
+            "command": "GET Incr_TestKey1",
+            "expected_output": "\"11\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_017": {
+        "remark": "对数值型字符串使用DECR命令",
+        "commands": [
+          {
+            "command": "SET Decr_TestKey1 \"7\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECR Decr_TestKey1",
+            "expected_output": "6"
+          },
+          {
+            "command": "GET Decr_TestKey1",
+            "expected_output": "\"6\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_018": {
+        "remark": "对非数值型字符串使用INCR命令",
+        "commands": [
+          {
+            "command": "SET Incr_TestKey2 \"Hello\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCR Incr_TestKey2",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_019": {
+        "remark": "对非数值型字符串使用DECR命令",
+        "commands": [
+          {
+            "command": "SET Decr_TestKey2 \"Hello\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECR Decr_TestKey2",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_020": {
+        "remark": "对超出int范围的数值使用INCR命令",
+        "commands": [
+          {
+            "command": "SET Incr_TestKey3 \"2147483649123\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCR Incr_TestKey3",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_021": {
+        "remark": "对超出int范围的数值使用DECR命令",
+        "commands": [
+          {
+            "command": "SET Decr_TestKey3 \"2147483649123\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECR Decr_TestKey3",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_022": {
+        "remark": "对不存在的键使用INCR命令",
+        "commands": [
+          {
+            "command": "INCR Incr_TestKey4",
+            "expected_output": "(integer) 1"
+          },
+          {
+            "command": "GET Incr_TestKey4",
+            "expected_output": "\"1\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_023": {
+        "remark": "对不存在的键使用DECR命令",
+        "commands": [
+          {
+            "command": "DECR Decr_TestKey4",
+            "expected_output": "-1"
+          },
+          {
+            "command": "GET Decr_TestKey4",
+            "expected_output": "\"-1\""
+          }
+        ]
+      }
     }
   },
   "IncrBy/DecrBy": {
-    "TS50": {
-      "remark": "INCRBY命令用于将键对应的值增加指定整数；DECRBY命令用于将键对应的值减少指定整数。",
-      "commands": [
-        {
-          "command": "SET IncrBy_TestKey1 \"10\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCRBY IncrBy_TestKey1 5",
-          "expected_output": "15"
-        },
-        {
-          "command": "GET IncrBy_TestKey1",
-          "expected_output": "\"15\""
-        }
-      ]
-    },
-    "TS51": {
-      "remark": "DECRBY命令用于将键对应的值减少指定整数。",
-      "commands": [
-        {
-          "command": "SET DecrBy_TestKey1 \"9\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECRBY DecrBy_TestKey1 4",
-          "expected_output": "5"
-        },
-        {
-          "command": "GET DecrBy_TestKey1",
-          "expected_output": "\"5\""
-        }
-      ]
-    },
-    "TS52": {
-      "remark": "尝试在非数值型变量上使用INCRBY命令。",
-      "commands": [
-        {
-          "command": "SET IncrBy_TestKey2 \"Hello\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCRBY IncrBy_TestKey2 5",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS53": {
-      "remark": "尝试在非数值型变量上使用DECRBY命令。",
-      "commands": [
-        {
-          "command": "SET DecrBy_TestKey2 \"Hello\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECRBY DecrBy_TestKey2 4",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS54": {
-      "remark": "尝试在超出int可表示范围的数值上使用INCRBY命令。",
-      "commands": [
-        {
-          "command": "SET IncrBy_TestKey3 \"2147483649123\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "INCRBY IncrBy_TestKey3 5",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS55": {
-      "remark": "尝试在超出int可表示范围的数值上使用DECRBY命令。",
-      "commands": [
-        {
-          "command": "SET DecrBy_TestKey3 \"2147483649123\"",
-          "expected_output": "\"OK\""
-        },
-        {
-          "command": "DECRBY DecrBy_TestKey3 4",
-          "expected_output": "(error) value is not an integer or out of range"
-        }
-      ]
-    },
-    "TS56": {
-      "remark": "在未赋值的键上使用INCRBY命令。",
-      "commands": [
-        {
-          "command": "INCRBY IncrBy_TestKey4 8",
-          "expected_output": "8"
-        },
-        {
-          "command": "GET IncrBy_TestKey4",
-          "expected_output": "\"8\""
-        }
-      ]
-    },
-    "TS57": {
-      "remark": "在未赋值的键上使用DECRBY命令。",
-      "commands": [
-        {
-          "command": "DECRBY DecrBy_TestKey4 6",
-          "expected_output": "-6"
-        },
-        {
-          "command": "GET DecrBy_TestKey4",
-          "expected_output": "\"-6\""
-        }
-      ]
+    "description": "将键对应的值增加或减少指定整数",
+    "TestCases": {
+      "GDS_Sys_Test_String_024": {
+        "remark": "对数值型字符串使用INCRBY命令",
+        "commands": [
+          {
+            "command": "SET IncrBy_TestKey1 \"10\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCRBY IncrBy_TestKey1 5",
+            "expected_output": "15"
+          },
+          {
+            "command": "GET IncrBy_TestKey1",
+            "expected_output": "\"15\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_025": {
+        "remark": "对数值型字符串使用DECRBY命令",
+        "commands": [
+          {
+            "command": "SET DecrBy_TestKey1 \"9\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECRBY DecrBy_TestKey1 4",
+            "expected_output": "5"
+          },
+          {
+            "command": "GET DecrBy_TestKey1",
+            "expected_output": "\"5\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_026": {
+        "remark": "对非数值型字符串使用INCRBY命令",
+        "commands": [
+          {
+            "command": "SET IncrBy_TestKey2 \"Hello\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCRBY IncrBy_TestKey2 5",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_027": {
+        "remark": "对非数值型字符串使用DECRBY命令",
+        "commands": [
+          {
+            "command": "SET DecrBy_TestKey2 \"Hello\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECRBY DecrBy_TestKey2 4",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_028": {
+        "remark": "对超出int范围的数值使用INCRBY命令",
+        "commands": [
+          {
+            "command": "SET IncrBy_TestKey3 \"2147483649123\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "INCRBY IncrBy_TestKey3 5",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_029": {
+        "remark": "对超出int范围的数值使用DECRBY命令",
+        "commands": [
+          {
+            "command": "SET DecrBy_TestKey3 \"2147483649123\"",
+            "expected_output": "\"OK\""
+          },
+          {
+            "command": "DECRBY DecrBy_TestKey3 4",
+            "expected_output": "(error) value is not an integer or out of range"
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_030": {
+        "remark": "对不存在的键使用INCRBY命令",
+        "commands": [
+          {
+            "command": "INCRBY IncrBy_TestKey4 8",
+            "expected_output": "8"
+          },
+          {
+            "command": "GET IncrBy_TestKey4",
+            "expected_output": "\"8\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_String_031": {
+        "remark": "在未赋值的键上使用DECRBY命令。",
+        "commands": [
+          {
+            "command": "DECRBY DecrBy_TestKey4 6",
+            "expected_output": "-6"
+          },
+          {
+            "command": "GET DecrBy_TestKey4",
+            "expected_output": "\"-6\""
+          }
+        ]
+      }
     }
   }
 }

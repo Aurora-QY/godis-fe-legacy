@@ -1,209 +1,227 @@
 {
   "LPush": {
-    "TS58": {
-      "remark": "LPush函数用于向列表的头部添加一个或多个元素。在使用CGO的上下文中，通过调用CGO中的InsertBytes或InsertInteger函数，具体取决于插入的数据类型。这些函数将在列表的头部（位置0）插入元素。",
-      "commands": [
-        {
-          "command": "LPUSH LPush_TestList \"LPush_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "LPUSH LPush_TestList \"LPush_Test1\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "LRANGE LPush_TestList 0 -1",
-          "expected_output": ["1) \"LPush_Test1\"", "2) \"LPush_Test2\""]
-        }
-      ]
+    "description": "向列表的头部添加一个或多个元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_001": {
+        "remark": "向LPush_TestList集合中依次加入元素LPush_Test2和LPush_Test1，然后使用LRANGE查看元素",
+        "commands": [
+          {
+            "command": "LPUSH LPush_TestList \"LPush_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "LPUSH LPush_TestList \"LPush_Test1\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "LRANGE LPush_TestList 0 -1",
+            "expected_output": ["1) \"LPush_Test1\"", "2) \"LPush_Test2\""]
+          }
+        ]
+      }
     }
   },
   "RPush": {
-    "TS59": {
-      "remark": "向列表的尾部添加一个或多个元素。操作逻辑与LPush类似，但是元素是被添加到列表的尾部。",
-      "commands": [
-        {
-          "command": "RPUSH RPush_TestList \"RPush_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "RPUSH RPush_TestList \"RPush_Test2\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "LRANGE LPush_TestList 0 -1",
-          "expected_output": ["1) \"RPush_Test1\"", "2) \"RPush_Test2\""]
-        }
-      ]
+    "description": "向列表的尾部添加一个或多个元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_002": {
+        "remark": "向RPush_TestList列表中依次加入元素RPush_Test1和RPush_Test2，然后使用LRANGE查看元素",
+        "commands": [
+          {
+            "command": "RPUSH RPush_TestList \"RPush_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "RPUSH RPush_TestList \"RPush_Test2\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "LRANGE LPush_TestList 0 -1",
+            "expected_output": ["1) \"RPush_Test1\"", "2) \"RPush_Test2\""]
+          }
+        ]
+      }
     }
   },
   "LPop": {
-    "TS60": {
-      "remark": "LPop用于移除并返回列表的第一个元素。可以使用DeleteByPos接口从列表中删除第一个位置的节点，并使用相应的GetInteger或GetByteArray方法获取值。",
-      "commands": [
-        {
-          "command": "RPUSH LPop_TestList1 \"LPop_Test1\" \"LPop_Test2\" \"LPop_Test3\" \"LPop_Test4\" \"LPop_Test5\"",
-          "expected_output": "5"
-        },
-        {
-          "command": "LPOP LPop_TestList1",
-          "expected_output": "\"LPop_Test1\""
-        },
-        {
-          "command": "LRANGE LPop_TestList1 0 -1",
-          "expected_output": ["1) \"LPop_Test2\"", "2) \"LPop_Test3\"", "3) \"LPop_Test4\"", "4) \"LPop_Test5\""]
-        }
-      ]
-    },
-    "TS61": {
-      "remark": "LPop用于移除并返回列表的第一个元素。可以使用DeleteByPos接口从列表中删除第一个位置的节点，并使用相应的GetInteger或GetByteArray方法获取值。",
-      "commands": [
-        {
-          "command": "RPUSH LPop_TestList2 \"LPop_Test1\" \"LPop_Test2\" \"LPop_Test3\" \"LPop_Test4\" \"LPop_Test5\"",
-          "expected_output": "5"
-        },
-        {
-          "command": "LPOP LPop_TestList2 2",
-          "expected_output": ["1) \"LPop_Test1\"", "2) \"LPop_Test2\""]
-        },
-        {
-          "command": "LRANGE LPop_TestList2 0 -1",
-          "expected_output": ["1) \"LPop_Test3\"", "2) \"LPop_Test4\"", "3) \"LPop_Test5\""]
-        }
-      ]
+    "description": "移除并返回列表的第一个元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_003": {
+        "remark": "向LPop_TestList1列表中加入5个元素，然后使用LPOP移除并返回第一个元素，最后使用LRANGE查看剩余元素",
+        "commands": [
+          {
+            "command": "RPUSH LPop_TestList1 \"LPop_Test1\" \"LPop_Test2\" \"LPop_Test3\" \"LPop_Test4\" \"LPop_Test5\"",
+            "expected_output": "5"
+          },
+          {
+            "command": "LPOP LPop_TestList1",
+            "expected_output": "\"LPop_Test1\""
+          },
+          {
+            "command": "LRANGE LPop_TestList1 0 -1",
+            "expected_output": ["1) \"LPop_Test2\"", "2) \"LPop_Test3\"", "3) \"LPop_Test4\"", "4) \"LPop_Test5\""]
+          }
+        ]
+      },
+      "GDS_Sys_Test_List_004": {
+        "remark": "向LPop_TestList2列表中加入5个元素，然后使用LPOP移除并返回前两个元素，最后使用LRANGE查看剩余元素",
+        "commands": [
+          {
+            "command": "RPUSH LPop_TestList2 \"LPop_Test1\" \"LPop_Test2\" \"LPop_Test3\" \"LPop_Test4\" \"LPop_Test5\"",
+            "expected_output": "5"
+          },
+          {
+            "command": "LPOP LPop_TestList2 2",
+            "expected_output": ["1) \"LPop_Test1\"", "2) \"LPop_Test2\""]
+          },
+          {
+            "command": "LRANGE LPop_TestList2 0 -1",
+            "expected_output": ["1) \"LPop_Test3\"", "2) \"LPop_Test4\"", "3) \"LPop_Test5\""]
+          }
+        ]
+      }
     }
   },
   "RPop": {
-    "TS62": {
-      "remark": "移除并返回列表的最后一个元素。操作逻辑与LPop类似，但是是移除列表的最后一个元素。",
-      "commands": [
-        {
-          "command": "RPUSH RPop_TestList1 \"RPop_Test1\" \"RPop_Test2\" \"RPop_Test3\" \"RPop_Test4\" \"RPop_Test5\"",
-          "expected_output": "5"
-        },
-        {
-          "command": "RPOP RPop_TestList1",
-          "expected_output": "\"RPop_Test5\""
-        },
-        {
-          "command": "LRANGE RPop_TestList1 0 -1",
-          "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\"", "4) \"RPop_Test4\""]
-        }
-      ]
-    },
-    "TS63": {
-      "remark": "移除并返回列表的最后一个元素。操作逻辑与LPop类似，但是是移除列表的最后一个元素。",
-      "commands": [
-        {
-          "command": "RPUSH RPop_TestList2 \"RPop_Test1\" \"RPop_Test2\" \"RPop_Test3\" \"RPop_Test4\" \"RPop_Test5\"",
-          "expected_output": "5"
-        },
-        {
-          "command": "RPOP RPop_TestList2 2",
-          "expected_output": ["1) \"RPop_Test5\"", "2) \"RPop_Test4\""]
-        },
-        {
-          "command": "LRANGE RPop_TestList2 0 -1",
-          "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\""]
-        }
-      ]
+    "description": "移除并返回列表的最后一个元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_005": {
+        "remark": "向RPop_TestList1列表中加入5个元素，然后使用RPOP移除并返回最后一个元素，最后使用LRANGE查看剩余元素",
+        "commands": [
+          {
+            "command": "RPUSH RPop_TestList1 \"RPop_Test1\" \"RPop_Test2\" \"RPop_Test3\" \"RPop_Test4\" \"RPop_Test5\"",
+            "expected_output": "5"
+          },
+          {
+            "command": "RPOP RPop_TestList1",
+            "expected_output": "\"RPop_Test5\""
+          },
+          {
+            "command": "LRANGE RPop_TestList1 0 -1",
+            "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\"", "4) \"RPop_Test4\""]
+          }
+        ]
+      },
+      "GDS_Sys_Test_List_006": {
+        "remark": "向RPop_TestList2列表中加入5个元素，然后使用RPOP移除并返回最后两个元素，最后使用LRANGE查看剩余元素",
+        "commands": [
+          {
+            "command": "RPUSH RPop_TestList2 \"RPop_Test1\" \"RPop_Test2\" \"RPop_Test3\" \"RPop_Test4\" \"RPop_Test5\"",
+            "expected_output": "5"
+          },
+          {
+            "command": "RPOP RPop_TestList2 2",
+            "expected_output": ["1) \"RPop_Test5\"", "2) \"RPop_Test4\""]
+          },
+          {
+            "command": "LRANGE RPop_TestList2 0 -1",
+            "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\""]
+          }
+        ]
+      }
     }
   },
   "LIndex": {
-    "TS64": {
-      "remark": "获取列表中指定位置的元素。该命令接受一个索引参数，用于返回列表中的指定位置的元素，支持正索引和负索引，主要调用的是CGO的Index接口",
-      "commands": [
-        {
-          "command": "LPUSH LIndex_TestList1 \"LIndex_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "LPUSH LIndex_TestList1 \"LIndex_Test1\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "LINDEX LIndex_TestList1 0",
-          "expected_output": "\"LIndex_Test1\""
-        }
-      ]
-    },
-    "TS65": {
-      "remark": "获取列表中指定位置的元素。该命令接受一个索引参数，用于返回列表中的指定位置的元素，支持正索引和负索引，主要调用的是CGO的Index接口",
-      "commands": [
-        {
-          "command": "LPUSH LIndex_TestList2 \"LIndex_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "LPUSH LIndex_TestList2 \"LIndex_Test1\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "LINDEX LIndex_TestList2 -1",
-          "expected_output": "\"LIndex_Test2\""
-        }
-      ]
-    },
-    "TS66": {
-      "remark": "获取列表中指定位置的元素。该命令接受一个索引参数，用于返回列表中的指定位置的元素，支持正索引和负索引，主要调用的是CGO的Index接口",
-      "commands": [
-        {
-          "command": "LPUSH LIndex_TestList3 \"LIndex_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "LPUSH LIndex_TestList3 \"LIndex_Test1\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "LINDEX LIndex_TestList3 3",
-          "expected_output": "(nil)"
-        }
-      ]
+    "description": "获取列表中指定位置的元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_007": {
+        "remark": "向LIndex_TestList1列表中加入两个元素，然后使用LINDEX获取索引为0的元素",
+        "commands": [
+          {
+            "command": "LPUSH LIndex_TestList1 \"LIndex_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "LPUSH LIndex_TestList1 \"LIndex_Test1\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "LINDEX LIndex_TestList1 0",
+            "expected_output": "\"LIndex_Test1\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_List_008": {
+        "remark": "向LIndex_TestList2列表中加入两个元素，然后使用LINDEX获取索引为-1的元素",
+        "commands": [
+          {
+            "command": "LPUSH LIndex_TestList2 \"LIndex_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "LPUSH LIndex_TestList2 \"LIndex_Test1\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "LINDEX LIndex_TestList2 -1",
+            "expected_output": "\"LIndex_Test2\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_List_009": {
+        "remark": "向LIndex_TestList3列表中加入两个元素，然后使用LINDEX获取索引为3的元素（不存在）",
+        "commands": [
+          {
+            "command": "LPUSH LIndex_TestList3 \"LIndex_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "LPUSH LIndex_TestList3 \"LIndex_Test1\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "LINDEX LIndex_TestList3 3",
+            "expected_output": "(nil)"
+          }
+        ]
+      }
     }
   },
   "LRange": {
-    "TS67": {
-      "remark": "获取列表指定范围内的所有元素。该命令接受两个索引，分别表示范围的开始和结束，并返回列表中该范围内的元素，主要调用的也是CGO的Index接口。代码中使用了一些辅助的工具和库函数，例如strconv.Atoi用于字符串到整数的转换，errors.New用于创建新的错误。另外，还使用了resp3库来处理Redis协议的响应，这是一个第三方库，用于生成符合Redis协议的响应格式。",
-      "commands": [
-        {
-          "command": "RPUSH LRange_TestList1 \"LRange_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "RPUSH LRange_TestList1 \"LRange_Test2\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "RPUSH LRange_TestList1 \"LRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "LRANGE LRange_TestList1 0 0",
-          "expected_output": ["1) \"LRange_Test1\""]
-        }
-      ]
-    },
-    "TS68": {
-      "remark": "获取列表指定范围内的所有元素。该命令接受两个索引，分别表示范围的开始和结束，并返回列表中该范围内的元素，主要调用的也是CGO的Index接口。代码中使用了一些辅助的工具和库函数，例如strconv.Atoi用于字符串到整数的转换，errors.New用于创建新的错误。另外，还使用了resp3库来处理Redis协议的响应，这是一个第三方库，用于生成符合Redis协议的响应格式。",
-      "commands": [
-        {
-          "command": "RPUSH LRange_TestList2 \"LRange_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "RPUSH LRange_TestList2 \"LRange_Test2\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "RPUSH LRange_TestList2 \"LRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "LRANGE LRange_TestList2 -3 2",
-          "expected_output": ["1) \"LRange_Test1\"", "2) \"LRange_Test2\"", "3) \"LRange_Test3\""]
-        }
-      ]
+    "description": "获取列表指定范围内的所有元素",
+    "TestCases": {
+      "GDS_Sys_Test_List_010": {
+        "remark": "向LRange_TestList1列表中加入三个元素，然后使用LRANGE获取索引0到0范围内的元素",
+        "commands": [
+          {
+            "command": "RPUSH LRange_TestList1 \"LRange_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "RPUSH LRange_TestList1 \"LRange_Test2\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "RPUSH LRange_TestList1 \"LRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "LRANGE LRange_TestList1 0 0",
+            "expected_output": ["1) \"LRange_Test1\""]
+          }
+        ]
+      },
+      "GDS_Sys_Test_List_011": {
+        "remark": "向LRange_TestList2列表中加入三个元素，然后使用LRANGE获取索引-3到2范围内的元素",
+        "commands": [
+          {
+            "command": "RPUSH LRange_TestList2 \"LRange_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "RPUSH LRange_TestList2 \"LRange_Test2\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "RPUSH LRange_TestList2 \"LRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "LRANGE LRange_TestList2 -3 2",
+            "expected_output": ["1) \"LRange_Test1\"", "2) \"LRange_Test2\"", "3) \"LRange_Test3\""]
+          }
+        ]
+      }
     }
   }
 }

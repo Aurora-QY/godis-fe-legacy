@@ -1,324 +1,348 @@
 {
   "ZAdd": {
-    "TS8": {
-      "remark": "ZAdd命令用于向有序集合添加成员并设置分数。",
-      "commands": [
-        {
-          "command": "ZADD ZAdd_TestSet 1 \"ZAdd_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZAdd_TestSet 1 \"ZAdd_Test11\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZAdd_TestSet 2 \"ZAdd_Test2\" 3 \"ZAdd_Test3\"",
-          "expected_output": "2"
-        },
-        {
-          "command": "ZRANGE ZAdd_TestSet 0 -1 WITHSCORES",
-          "expected_output": "1) \"ZAdd_Test1\"\n2) \"1\"\n3) \"ZAdd_Test11\"\n4) \"1\"\n5) \"ZAdd_Test2\"\n6) \"2\"\n7) \"ZAdd_Test3\"\n8) \"3\""
-        }
-      ]
+    "description": "向有序集合添加成员并设置分数",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_001": {
+        "remark": "向ZAdd_TestSet有序集合中添加多个成员并设置分数，然后使用ZRANGE查看结果",
+        "commands": [
+          {
+            "command": "ZADD ZAdd_TestSet 1 \"ZAdd_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZAdd_TestSet 1 \"ZAdd_Test11\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZAdd_TestSet 2 \"ZAdd_Test2\" 3 \"ZAdd_Test3\"",
+            "expected_output": "2"
+          },
+          {
+            "command": "ZRANGE ZAdd_TestSet 0 -1 WITHSCORES",
+            "expected_output": "1) \"ZAdd_Test1\"\n2) \"1\"\n3) \"ZAdd_Test11\"\n4) \"1\"\n5) \"ZAdd_Test2\"\n6) \"2\"\n7) \"ZAdd_Test3\"\n8) \"3\""
+          }
+        ]
+      }
     }
   },
   "ZCard": {
-    "TS9": {
-      "remark": "ZCard命令返回有序集合中的成员数量。",
-      "commands": [
-        {
-          "command": "ZADD ZCard_TestSet1 1 \"ZCard_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCard_TestSet1 2 \"ZCard_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZCARD ZCard_TestSet1",
-          "expected_output": "2"
-        }
-      ]
-    },
-    "TS10": {
-      "remark": "ZCard命令返回有序集合中的成员数量。",
-      "commands": [
-        {
-          "command": "ZCARD ZCard_TestSet2",
-          "expected_output": "0"
-        }
-      ]
+    "description": "返回有序集合中的成员数量",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_002": {
+        "remark": "向ZCard_TestSet1有序集合中添加两个成员，然后使用ZCARD查看成员数量",
+        "commands": [
+          {
+            "command": "ZADD ZCard_TestSet1 1 \"ZCard_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCard_TestSet1 2 \"ZCard_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZCARD ZCard_TestSet1",
+            "expected_output": "2"
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_003": {
+        "remark": "使用ZCARD查看空有序集合ZCard_TestSet2的成员数量",
+        "commands": [
+          {
+            "command": "ZCARD ZCard_TestSet2",
+            "expected_output": "0"
+          }
+        ]
+      }
     }
   },
   "ZCount": {
-    "TS11": {
-      "remark": "ZCount命令计算有序集合中指定分数范围内的成员数量。",
-      "commands": [
-        {
-          "command": "ZADD ZCount_TestSet1 1 \"ZCount_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet1 2 \"ZCount_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet1 3 \"ZCount_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZCOUNT ZCount_TestSet1 -inf +inf",
-          "expected_output": "3"
-        }
-      ]
-    },
-    "TS12": {
-      "remark": "ZCount命令计算有序集合中指定分数范围内的成员数量。",
-      "commands": [
-        {
-          "command": "ZADD ZCount_TestSet2 1 \"ZCount_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet2 2 \"ZCount_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet2 3 \"ZCount_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZCOUNT ZCount_TestSet2 (1 3",
-          "expected_output": "2"
-        }
-      ]
-    },
-    "TS13": {
-      "remark": "ZCount命令计算有序集合中指定分数范围内的成员数量。",
-      "commands": [
-        {
-          "command": "ZADD ZCount_TestSet3 1 \"ZCount_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet3 2 \"ZCount_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZCount_TestSet3 3 \"ZCount_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZCOUNT ZCount_TestSet3 (1 (3",
-          "expected_output": "1"
-        }
-      ]
+    "description": "计算有序集合中指定分数范围内的成员数量",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_004": {
+        "remark": "向ZCount_TestSet1有序集合中添加三个成员，然后使用ZCOUNT计算所有成员数量",
+        "commands": [
+          {
+            "command": "ZADD ZCount_TestSet1 1 \"ZCount_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet1 2 \"ZCount_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet1 3 \"ZCount_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZCOUNT ZCount_TestSet1 -inf +inf",
+            "expected_output": "3"
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_005": {
+        "remark": "向ZCount_TestSet2有序集合中添加三个成员，然后使用ZCOUNT计算分数在(1到3之间的成员数量",
+        "commands": [
+          {
+            "command": "ZADD ZCount_TestSet2 1 \"ZCount_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet2 2 \"ZCount_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet2 3 \"ZCount_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZCOUNT ZCount_TestSet2 (1 3",
+            "expected_output": "2"
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_006": {
+        "remark": "向ZCount_TestSet3有序集合中添加三个成员，然后使用ZCOUNT计算分数在(1到(3之间的成员数量",
+        "commands": [
+          {
+            "command": "ZADD ZCount_TestSet3 1 \"ZCount_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet3 2 \"ZCount_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZCount_TestSet3 3 \"ZCount_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZCOUNT ZCount_TestSet3 (1 (3",
+            "expected_output": "1"
+          }
+        ]
+      }
     }
   },
   "ZIncrBy": {
-    "TS14": {
-      "remark": "ZIncrBy命令增加有序集合中成员的分数。",
-      "commands": [
-        {
-          "command": "ZADD ZIncrBy_TestSet 1 \"ZIncrBy_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZIncrBy_TestSet 2 \"ZIncrBy_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZINCRBY ZIncrBy_TestSet 2 \"ZIncrBy_Test1\"",
-          "expected_output": "\"3\""
-        },
-        {
-          "command": "ZRANGE ZIncrBy_TestSet 0 -1 WITHSCORES",
-          "expected_output": "1) \"ZIncrBy_Test2\"\n2) \"2\"\n3) \"ZIncrBy_Test1\"\n4) \"3\""
-        }
-      ]
+    "description": "增加有序集合中成员的分数",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_007": {
+        "remark": "向ZIncrBy_TestSet有序集合中添加两个成员，然后使用ZINCRBY增加其中一个成员的分数",
+        "commands": [
+          {
+            "command": "ZADD ZIncrBy_TestSet 1 \"ZIncrBy_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZIncrBy_TestSet 2 \"ZIncrBy_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZINCRBY ZIncrBy_TestSet 2 \"ZIncrBy_Test1\"",
+            "expected_output": "\"3\""
+          },
+          {
+            "command": "ZRANGE ZIncrBy_TestSet 0 -1 WITHSCORES",
+            "expected_output": "1) \"ZIncrBy_Test2\"\n2) \"2\"\n3) \"ZIncrBy_Test1\"\n4) \"3\""
+          }
+        ]
+      }
     }
   },
   "ZRange": {
-    "TS15": {
-      "remark": "ZRange命令返回有序集合中指定索引范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRange_TestSet1 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "ZRANGE ZRange_TestSet1 0 -1",
-          "expected_output": "1) \"ZRange_Test1\"\n2) \"ZRange_Test2\"\n3) \"ZRange_Test3\""
-        }
-      ]
-    },
-    "TS16": {
-      "remark": "ZRange命令返回有序集合中指定索引范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRange_TestSet2 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "ZRANGE ZRange_TestSet2 2 3",
-          "expected_output": "1) \"ZRange_Test3\""
-        }
-      ]
-    },
-    "TS17": {
-      "remark": "ZRange命令返回有序集合中指定索引范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRange_TestSet3 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "ZRANGE ZRange_TestSet3 -2 -1",
-          "expected_output": "1) \"ZRange_Test2\"\n2) \"ZRange_Test3\""
-        }
-      ]
-    },
-    "TS18": {
-      "remark": "ZRange命令返回有序集合中指定索引范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRange_TestSet4 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "ZRANGE ZRange_TestSet4 2 0",
-          "expected_output": "(empty array)"
-        }
-      ]
-    },
-    "TS19": {
-      "remark": "ZRange命令返回有序集合中指定索引范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRange_TestSet5 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
-          "expected_output": "3"
-        },
-        {
-          "command": "ZRANGE ZRange_TestSet5 -1 -3",
-          "expected_output": "(empty array)"
-        }
-      ]
+    "description": "返回有序集合中指定索引范围内的成员",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_008": {
+        "remark": "向ZRange_TestSet1有序集合中添加三个成员，然后使用ZRANGE查看所有成员",
+        "commands": [
+          {
+            "command": "ZADD ZRange_TestSet1 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "ZRANGE ZRange_TestSet1 0 -1",
+            "expected_output": "1) \"ZRange_Test1\"\n2) \"ZRange_Test2\"\n3) \"ZRange_Test3\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_009": {
+        "remark": "向ZRange_TestSet2有序集合中添加三个成员，然后使用ZRANGE查看索引2到3的成员",
+        "commands": [
+          {
+            "command": "ZADD ZRange_TestSet2 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "ZRANGE ZRange_TestSet2 2 3",
+            "expected_output": "1) \"ZRange_Test3\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_010": {
+        "remark": "向ZRange_TestSet3有序集合中添加三个成员，然后使用ZRANGE查看倒数第二个到最后一个成员",
+        "commands": [
+          {
+            "command": "ZADD ZRange_TestSet3 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "ZRANGE ZRange_TestSet3 -2 -1",
+            "expected_output": "1) \"ZRange_Test2\"\n2) \"ZRange_Test3\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_011": {
+        "remark": "向ZRange_TestSet4有序集合中添加三个成员，然后使用ZRANGE查看索引2到0的成员（反向范围）",
+        "commands": [
+          {
+            "command": "ZADD ZRange_TestSet4 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "ZRANGE ZRange_TestSet4 2 0",
+            "expected_output": "(empty array)"
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_012": {
+        "remark": "向ZRange_TestSet5有序集合中添加三个成员，然后使用ZRANGE查看倒数第一个到倒数第三个成员（反向范围）",
+        "commands": [
+          {
+            "command": "ZADD ZRange_TestSet5 1 \"ZRange_Test1\" 2 \"ZRange_Test2\" 3 \"ZRange_Test3\"",
+            "expected_output": "3"
+          },
+          {
+            "command": "ZRANGE ZRange_TestSet5 -1 -3",
+            "expected_output": "(empty array)"
+          }
+        ]
+      }
     }
   },
   "ZRangeByScore": {
-    "TS20": {
-      "remark": "ZRangeByScore命令返回有序集合中指定分数范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRangeByScore_TestSet1 1 \"ZRangeByScore_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet1 2 \"ZRangeByScore_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet1 3 \"ZRangeByScore_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZRANGEBYSCORE ZRangeByScore_TestSet1 -inf +inf",
-          "expected_output": "1) \"ZRangeByScore_Test1\"\n2) \"ZRangeByScore_Test2\"\n3) \"ZRangeByScore_Test3\""
-        }
-      ]
-    },
-    "TS21": {
-      "remark": "ZRangeByScore命令返回有序集合中指定分数范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRangeByScore_TestSet2 1 \"ZRangeByScore_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet2 2 \"ZRangeByScore_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet2 3 \"ZRangeByScore_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZRANGEBYSCORE ZRangeByScore_TestSet2 1 2",
-          "expected_output": "1) \"ZRangeByScore_Test1\"\n2) \"ZRangeByScore_Test2\""
-        }
-      ]
-    },
-    "TS22": {
-      "remark": "ZRangeByScore命令返回有序集合中指定分数范围内的成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRangeByScore_TestSet3 1 \"ZRangeByScore_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet3 2 \"ZRangeByScore_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRangeByScore_TestSet3 3 \"ZRangeByScore_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZRANGEBYSCORE ZRangeByScore_TestSet3 (1 2",
-          "expected_output": "1) \"ZRangeByScore_Test2\""
-        }
-      ]
+    "description": "返回有序集合中指定分数范围内的成员",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_013": {
+        "remark": "向ZRangeByScore_TestSet1有序集合中添加三个成员，然后使用ZRANGEBYSCORE查看所有成员",
+        "commands": [
+          {
+            "command": "ZADD ZRangeByScore_TestSet1 1 \"ZRangeByScore_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet1 2 \"ZRangeByScore_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet1 3 \"ZRangeByScore_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZRANGEBYSCORE ZRangeByScore_TestSet1 -inf +inf",
+            "expected_output": "1) \"ZRangeByScore_Test1\"\n2) \"ZRangeByScore_Test2\"\n3) \"ZRangeByScore_Test3\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_014": {
+        "remark": "向ZRangeByScore_TestSet2有序集合中添加三个成员，然后使用ZRANGEBYSCORE查看分数在1到2之间的成员",
+        "commands": [
+          {
+            "command": "ZADD ZRangeByScore_TestSet2 1 \"ZRangeByScore_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet2 2 \"ZRangeByScore_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet2 3 \"ZRangeByScore_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZRANGEBYSCORE ZRangeByScore_TestSet2 1 2",
+            "expected_output": "1) \"ZRangeByScore_Test1\"\n2) \"ZRangeByScore_Test2\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_015": {
+        "remark": "向ZRangeByScore_TestSet3有序集合中添加三个成员，然后使用ZRANGEBYSCORE查看分数在1到2之间（不包括1）的成员",
+        "commands": [
+          {
+            "command": "ZADD ZRangeByScore_TestSet3 1 \"ZRangeByScore_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet3 2 \"ZRangeByScore_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRangeByScore_TestSet3 3 \"ZRangeByScore_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZRANGEBYSCORE ZRangeByScore_TestSet3 (1 2",
+            "expected_output": "1) \"ZRangeByScore_Test2\""
+          }
+        ]
+      }
     }
   },
   "ZRem": {
-    "TS24": {
-      "remark": "ZRem命令用于移除有序集合中的一个或多个成员。",
-      "commands": [
-        {
-          "command": "ZADD ZRem_TestSet 1 \"ZRem_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRem_TestSet 2 \"ZRem_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZADD ZRem_TestSet 3 \"ZRem_Test3\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZREM ZRem_TestSet \"ZRem_Test2\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZRANGE ZRem_TestSet 0 -1 WITHSCORES",
-          "expected_output": "1) \"ZRem_Test1\"\n2) \"1\"\n3) \"ZRem_Test3\"\n4) \"3\""
-        }
-      ]
+    "description": "移除有序集合中的一个或多个成员",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_016": {
+        "remark": "向ZRem_TestSet有序集合中添加三个成员，然后使用ZREM移除其中一个成员，最后查看结果",
+        "commands": [
+          {
+            "command": "ZADD ZRem_TestSet 1 \"ZRem_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRem_TestSet 2 \"ZRem_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZADD ZRem_TestSet 3 \"ZRem_Test3\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZREM ZRem_TestSet \"ZRem_Test2\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZRANGE ZRem_TestSet 0 -1 WITHSCORES",
+            "expected_output": "1) \"ZRem_Test1\"\n2) \"1\"\n3) \"ZRem_Test3\"\n4) \"3\""
+          }
+        ]
+      }
     }
   },
   "ZScore": {
-    "TS25": {
-      "remark": "ZScore命令用于返回有序集合中指定成员的分数。",
-      "commands": [
-        {
-          "command": "ZADD ZScore_TestSet1 1 \"ZScore_Test1\"",
-          "expected_output": "1"
-        },
-        {
-          "command": "ZSCORE ZScore_TestSet1 \"ZScore_Test1\"",
-          "expected_output": "\"1\""
-        }
-      ]
-    },
-    "TS26": {
-      "remark": "ZScore命令用于返回有序集合中指定成员的分数。",
-      "commands": [
-        {
-          "command": "ZSCORE ZScore_TestSet2 \"ZScore_Test2\"",
-          "expected_output": "(nil)"
-        }
-      ]
+    "description": "获取指定键的分数",
+    "TestCases": {
+      "GDS_Sys_Test_ZSet_017": {
+        "remark": "ZScore命令用于返回有序集合中指定成员的分数。",
+        "commands": [
+          {
+            "command": "ZADD ZScore_TestSet1 1 \"ZScore_Test1\"",
+            "expected_output": "1"
+          },
+          {
+            "command": "ZSCORE ZScore_TestSet1 \"ZScore_Test1\"",
+            "expected_output": "\"1\""
+          }
+        ]
+      },
+      "GDS_Sys_Test_ZSet_018": {
+        "remark": "ZScore命令用于返回有序集合中指定成员的分数。",
+        "commands": [
+          {
+            "command": "ZSCORE ZScore_TestSet2 \"ZScore_Test2\"",
+            "expected_output": "(nil)"
+          }
+        ]
+      }
     }
   }
 }
