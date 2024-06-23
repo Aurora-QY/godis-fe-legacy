@@ -1,0 +1,28 @@
+{
+  "GDS_Sys_Test_ZSet_002": {
+    "remark": "向ZCard_TestSet1有序集合中添加两个成员，然后使用ZCARD查看成员数量",
+    "commands": [
+      {
+        "command": "ZADD ZCard_TestSet1 1 \"ZCard_Test1\"",
+        "expected_output": "1"
+      },
+      {
+        "command": "ZADD ZCard_TestSet1 2 \"ZCard_Test2\"",
+        "expected_output": "1"
+      },
+      {
+        "command": "ZCARD ZCard_TestSet1",
+        "expected_output": "2"
+      }
+    ]
+  },
+  "GDS_Sys_Test_ZSet_003": {
+    "remark": "使用ZCARD查看空有序集合ZCard_TestSet2的成员数量",
+    "commands": [
+      {
+        "command": "ZCARD ZCard_TestSet2",
+        "expected_output": "0"
+      }
+    ]
+  }
+}
