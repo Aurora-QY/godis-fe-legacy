@@ -10,7 +10,6 @@
           <p><strong>测试工具：</strong></p>
           <p>go test (go部分) / google test (c++部分)</p>
           <p>使用go-junit-report工具转换go test并输出至allure</p>
-          <p />
           <p><strong>测试用例设计方法：</strong></p>
           <p>黑盒测试技术：边界值分析法、等价类</p>
           <p>白盒测试技术：逻辑覆盖测试法</p>
@@ -34,7 +33,7 @@ export default {
     return {
       isReportVisible: false,
       isLoading: false,
-      allureReportUrl: 'http://192.168.230.1:14900/', // 替换为你的 Allure 报告 URL
+      allureReportUrl: 'http://192.168.230.1:7697/', // 替换为你的 Allure 报告 URL
     }
   },
   methods: {

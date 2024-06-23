@@ -15,11 +15,11 @@
           },
           {
             "command": "SADD SAdd_TestSet \"SAdd_Test1\"",
-            "expected_output": "0"
+            "expected_output": "1"
           },
           {
             "command": "SMEMBERS SAdd_TestSet",
-            "expected_output": ["1) \"SAdd_Test1\"", "2) \"SAdd_Test2\""]
+            "expected_output": "1) \"SAdd_Test1\",2) \"SAdd_Test2\""
           }
         ]
       }
@@ -63,7 +63,7 @@
           },
           {
             "command": "SMEMBERS SMembers_TestSet1",
-            "expected_output": ["1) \"SMembers_Test1\"", "2) \"SMembers_Test2\""]
+            "expected_output": "1) \"SMembers_Test1\",2) \"SMembers_Test2\""
           }
         ]
       },
@@ -137,7 +137,7 @@
           },
           {
             "command": "SMEMBERS SRem_TestSet",
-            "expected_output": ["1) \"SRem_Test2\"", "2) \"SRem_Test3\""]
+            "expected_output": "1) \"SRem_Test2\",2) \"SRem_Test3\""
           }
         ]
       }

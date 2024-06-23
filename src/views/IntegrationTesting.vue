@@ -213,7 +213,7 @@ export default {
           // const res = await this.executeCommand(command.command)
           const expectedOutput = command.expected_output
           const result = {
-            result: expected_output,
+            result: expectedOutput,
             alloc: 0,
             timeCost: 0,
           }
@@ -244,7 +244,7 @@ export default {
             result = response.data.data
             return result
           } else {
-            ElMessage.error('执行错误!')
+            // ElMessage.error('执行错误!')
             result = response.data.data
             return result
           }

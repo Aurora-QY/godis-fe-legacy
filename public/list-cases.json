@@ -15,7 +15,7 @@
           },
           {
             "command": "LRANGE LPush_TestList 0 -1",
-            "expected_output": ["1) \"LPush_Test1\"", "2) \"LPush_Test2\""]
+            "expected_output": "1) \"LPush_Test1\",2) \"LPush_Test2\""
           }
         ]
       }
@@ -37,7 +37,7 @@
           },
           {
             "command": "LRANGE LPush_TestList 0 -1",
-            "expected_output": ["1) \"RPush_Test1\"", "2) \"RPush_Test2\""]
+            "expected_output": "1) \"RPush_Test1\",2) \"RPush_Test2\""
           }
         ]
       }
@@ -59,7 +59,7 @@
           },
           {
             "command": "LRANGE LPop_TestList1 0 -1",
-            "expected_output": ["1) \"LPop_Test2\"", "2) \"LPop_Test3\"", "3) \"LPop_Test4\"", "4) \"LPop_Test5\""]
+            "expected_output": "1) \"LPop_Test2\",2) \"LPop_Test3\",3) \"LPop_Test4\",4) \"LPop_Test5\""
           }
         ]
       },
@@ -72,11 +72,11 @@
           },
           {
             "command": "LPOP LPop_TestList2 2",
-            "expected_output": ["1) \"LPop_Test1\"", "2) \"LPop_Test2\""]
+            "expected_output": "1) \"LPop_Test1\",2) \"LPop_Test2\""
           },
           {
             "command": "LRANGE LPop_TestList2 0 -1",
-            "expected_output": ["1) \"LPop_Test3\"", "2) \"LPop_Test4\"", "3) \"LPop_Test5\""]
+            "expected_output": "1) \"LPop_Test3\",2) \"LPop_Test4\",3) \"LPop_Test5\""
           }
         ]
       }
@@ -98,7 +98,7 @@
           },
           {
             "command": "LRANGE RPop_TestList1 0 -1",
-            "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\"", "4) \"RPop_Test4\""]
+            "expected_output": "1) \"RPop_Test1\",2) \"RPop_Test2\",3) \"RPop_Test3\",4) \"RPop_Test4\""
           }
         ]
       },
@@ -111,11 +111,11 @@
           },
           {
             "command": "RPOP RPop_TestList2 2",
-            "expected_output": ["1) \"RPop_Test5\"", "2) \"RPop_Test4\""]
+            "expected_output": ["1) \"RPop_Test5\",2) \"RPop_Test4\""]
           },
           {
             "command": "LRANGE RPop_TestList2 0 -1",
-            "expected_output": ["1) \"RPop_Test1\"", "2) \"RPop_Test2\"", "3) \"RPop_Test3\""]
+            "expected_output": ["1) \"RPop_Test1\",2) \"RPop_Test2\",3) \"RPop_Test3\""]
           }
         ]
       }
@@ -154,7 +154,7 @@
           },
           {
             "command": "LINDEX LIndex_TestList2 -1",
-            "expected_output": "\"LIndex_Test2\""
+            "expected_output": "LIndex_Test2"
           }
         ]
       },
@@ -197,7 +197,7 @@
           },
           {
             "command": "LRANGE LRange_TestList1 0 0",
-            "expected_output": ["1) \"LRange_Test1\""]
+            "expected_output": "1) \"LRange_Test1\""
           }
         ]
       },
@@ -218,7 +218,7 @@
           },
           {
             "command": "LRANGE LRange_TestList2 -3 2",
-            "expected_output": ["1) \"LRange_Test1\"", "2) \"LRange_Test2\"", "3) \"LRange_Test3\""]
+            "expected_output": ["1) \"LRange_Test1\",2) \"LRange_Test2\",3) \"LRange_Test3\""]
           }
         ]
       }

@@ -32,84 +32,14 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
       activeTab: 'write',
-      writeResults: {
-        LPush: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        Set: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        Append: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        RPush: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        SAdd: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        Increase: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        ZAdd: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-      },
-      readResults: {
-        LPush: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        Set: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        Append: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        RPush: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        SAdd: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-        Increase: {
-          code: 200,
-          data: 'Error handling response for command: java.net.SocketException: Connection reset by peer',
-          message: 'Success',
-        },
-        ZAdd: {
-          code: 40102,
-          data: 'Error executing command: java.net.SocketException: Connection reset by peer',
-          message: '未知错误',
-        },
-      },
+      writeResults: {},
+      readResults: {},
     }
   },
   computed: {

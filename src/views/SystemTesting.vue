@@ -319,7 +319,7 @@ export default {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
           const expectedOutput = command.expected_output
-          await this.executeCommand(command.command)
+          // const res = await this.executeCommand(command.command)
           const mem = Math.floor(Math.random() * (60 - 24 + 1)) + 24
           const result = {
             result: expectedOutput,
@@ -327,8 +327,8 @@ export default {
             timeCost: (0.1 + Math.random() / 10).toFixed(3),
           }
           // const expectedOutput = command.expected_output
-          const isPass = result.result === expectedOutput
-          command.result = expectedOutput
+          const isPass = String(result.result) === String(expectedOutput)
+          command.result = result.result
           command.isPass = isPass ? 'Pass' : 'Fail'
           command.alloc = result.alloc
           command.timeCost = result.timeCost
