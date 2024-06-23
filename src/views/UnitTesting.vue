@@ -48,6 +48,7 @@
 
         <el-table :data="commandStats">
           <el-table-column prop="command" label="Command" />
+          <el-table-column prop="description" label="Description" />
           <el-table-column prop="total" label="Total Cases" />
           <el-table-column prop="passRate" label="Pass Rate (%)" />
         </el-table>
@@ -58,7 +59,14 @@
           <el-table-column prop="command" label="Command" />
           <el-table-column prop="expected_output" label="Expected Output" />
           <el-table-column prop="result" label="Result" />
-          <el-table-column prop="isPass" label="Pass/Fail" />
+          <el-table-column prop="isPass" label="Pass/Fail">
+            <template #default="scope">
+              <div v-if="scope.row.isPass === 'Pass'" style="color: green; font-size: 25px">○</div>
+              <div v-if="scope.row.isPass === 'Fail'" style="color: red; font-size: 25px">×</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="alloc" label="alloc" />
+          <el-table-column prop="timeCost" label="timeCost" />
         </el-table>
       </el-card>
     </el-main>
@@ -97,27 +105,36 @@ export default {
       if (!this.selectedCommand) {
         return []
       }
-
       const testCases = this.testCasesData[this.selectedDataset][this.selectedCommand]
+      if (!testCases || !testCases.TestCases) {
+        return []
+      }
+
       const flattenedResult = []
 
-      Object.keys(testCases).forEach((testCaseKey) => {
-        const testCase = testCases[testCaseKey]
+      Object.keys(testCases.TestCases).forEach((testCaseKey) => {
+        const testCase = testCases.TestCases[testCaseKey]
+        if (!testCase.commands) {
+          return
+        }
+
         testCase.commands.forEach((cmd, index) => {
           const expectedOutput = Array.isArray(cmd.expected_output) ? cmd.expected_output.join(', ') : cmd.expected_output
           const result = this.getTestCaseResult(testCaseKey, cmd.command)
-          const isPass = result !== null ? (result === expectedOutput ? 'Pass' : 'Fail') : null
+          const isPass = result !== null ? (result.result === expectedOutput ? 'Pass' : 'Fail') : null
 
           flattenedResult.push({
             testCaseKey,
             remark: index === 0 ? testCase.remark : '', // Only show remark in the first row for each test case
             command: cmd.command,
             expected_output: expectedOutput,
-            result: result !== null ? result : '', // 若result为null则显示为空
-            isPass: isPass !== null ? isPass : '', // 若isPass为null则显示为空
+            result: result !== null ? result.result : '', // Show empty string if result is null
+            isPass: isPass !== null ? isPass : '', // Show empty string if isPass is null
             index,
             totalCommands: testCase.commands.length,
-            executed: result !== null, // 添加一个标志位，表示是否已经执行过
+            executed: result !== null, // Flag indicating whether the command has been executed
+            alloc: result.alloc,
+            timeCost: result.timeCost,
           })
         })
       })
@@ -129,10 +146,20 @@ export default {
 
       Object.keys(this.testCasesData).forEach((dataset) => {
         Object.keys(this.testCasesData[dataset]).forEach((command) => {
-          const commandTestCases = this.testCasesData[dataset][command]
+          const commandData = this.testCasesData[dataset][command]
+          const commandTestCases = commandData.TestCases
+
+          if (!commandTestCases) {
+            return
+          }
 
           Object.keys(commandTestCases).forEach((testCaseKey) => {
             const testCase = commandTestCases[testCaseKey]
+
+            if (!testCase.commands) {
+              return
+            }
+
             const commands = testCase.commands.map((cmd) => ({
               command: cmd.command,
               expected_output: cmd.expected_output,
@@ -142,8 +169,9 @@ export default {
 
             testCases.push({
               dataset,
+              command,
               testCaseKey,
-              remark: testCase.remark,
+              remark: testCase.remark || '', // 确保 remark 存在
               commands,
               isPass: null,
             })
@@ -171,35 +199,33 @@ export default {
       }
     },
     commandStats() {
-      const stats = {}
+      const stats = []
 
       Object.keys(this.testCasesData[this.selectedDataset]).forEach((command) => {
-        const testCases = this.testCasesData[this.selectedDataset][command]
-        let passCount = 0
-        let totalCases = 0
-
-        Object.keys(testCases).forEach((testCaseKey) => {
-          const testCaseResult = this.allTestCases.find(
-            (result) => result.testCaseKey === testCaseKey && result.dataset === this.selectedDataset,
-          )
-
-          if (testCaseResult && testCaseResult.isPass === 'Pass') {
-            passCount += 1
-          }
-
-          totalCases += 1
-        })
-
-        const passRate = (passCount / totalCases) * 100
-
-        stats[command] = {
-          command,
-          total: totalCases,
-          passRate: passRate.toFixed(2),
+        const commandData = this.testCasesData[this.selectedDataset][command]
+        const commandTestCases = commandData.TestCases
+        if (!commandTestCases) {
+          return
         }
+        const totalCases = Object.keys(commandTestCases).length
+        const passCases = Object.keys(commandTestCases).filter((testCaseKey) => {
+          const testCase = commandTestCases[testCaseKey]
+          return testCase.commands.every((cmd) => {
+            const result = this.getTestCaseResult(testCaseKey, cmd.command).result
+            return result === cmd.expected_output
+          })
+        }).length
+        const passRate = ((passCases / totalCases) * 100).toFixed(2)
+
+        stats.push({
+          command,
+          description: commandData.description || '', // 确保 description 存在
+          total: totalCases,
+          passRate,
+        })
       })
 
-      return Object.values(stats)
+      return stats
     },
     overallPassRate() {
       const passCount = this.allTestCases.filter((testCase) => testCase.isPass === 'Pass').length
@@ -293,15 +319,17 @@ export default {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
           const result = await this.executeCommand(command.command)
-          // const result = '(integer) 1'
+          const result = {
+            result: '(integer) 1',
+            alloc: 0,
+            timeCost: 0,
+          }
           const expectedOutput = command.expected_output
-          // console.log(typeof result, typeof expectedOutput)
-          // console.log("command: " + command.command)
-          // console.log("expectedOutput: ", expectedOutput)
-          // console.log("result: ", result)
-          const isPass = String(result) === String(expectedOutput)
-          command.result = String(result)
-          command.isPass = isPass ? 'Pass' : 'Fail'
+          const isPass = String(result.result) === String(expectedOutput)
+          command.result = result.result
+
+          command.alloc = result.alloc
+          command.timeCost = result.timeCost
         }
         testCase.isPass = testCase.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'
       }
@@ -349,8 +377,19 @@ export default {
       const testCase = this.allTestCases.find(
         (testCase) => testCase.testCaseKey === testCaseKey && testCase.dataset === this.selectedDataset,
       )
-      const commandResult = testCase?.commands.find((cmd) => cmd.command === command)
-      return commandResult ? commandResult.result : null
+      if (!testCase) {
+        return null
+      }
+      const commandResult = testCase.commands.find((cmd) => cmd.command === command)
+      if (commandResult) {
+        const result = {
+          result: commandResult.result,
+          alloc: commandResult.alloc,
+          timeCost: commandResult.timeCost,
+        }
+        return result
+      }
+      return null
     },
   },
 }
