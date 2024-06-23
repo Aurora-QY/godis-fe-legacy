@@ -318,20 +318,20 @@ export default {
     async executeAllTestCases() {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
-          const result = await this.executeCommand(command.command)
-          const result = {
-            result: '(integer) 1',
+          const res = await this.executeCommand(command.command)
+          result = {
+            result: res,
             alloc: 0,
             timeCost: 0,
           }
-          const expectedOutput = command.expected_output
-          const isPass = String(result.result) === String(expectedOutput)
+          // const expectedOutput = command.expected_output
+          // const isPass = String(result.result) === String(expectedOutput)
           command.result = result.result
 
           command.alloc = result.alloc
           command.timeCost = result.timeCost
         }
-        testCase.isPass = testCase.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'
+        testCase.isPass = testCase.TestCases.commands.every((cmd) => cmd.isPass === 'Pass') ? 'Pass' : 'Fail'
       }
 
       // 强制更新通过率和命令统计数据
