@@ -318,16 +318,16 @@ export default {
     async executeAllTestCases() {
       for (const testCase of this.allTestCases) {
         for (const command of testCase.commands) {
-          // const result = await this.executeCommand(command.command)
+          const result = await this.executeCommand(command.command)
           const result = {
             result: '(integer) 1',
             alloc: 0,
             timeCost: 0,
           }
           const expectedOutput = command.expected_output
-          const isPass = result.result === expectedOutput
+          const isPass = String(result.result) === String(expectedOutput)
           command.result = result.result
-          command.isPass = isPass ? 'Pass' : 'Fail'
+
           command.alloc = result.alloc
           command.timeCost = result.timeCost
         }
