@@ -1,0 +1,182 @@
+{
+  "GDS_INT_001": {
+    "remark": "缓存: Web应用中缓存用户信息，减少数据库查询。",
+    "commands": [
+      {
+        "command": "SET user:1001 \"{name: 'Alice', age: 28}\" EX 3600",
+        "expected_output": "OK"
+      },
+      {
+        "command": "GET user:1001",
+        "expected_output": "{name: 'Alice', age: 28}"
+      }
+    ]
+  },
+  "GDS_INT_002": {
+    "remark": "排行榜和计数器: 游戏应用中实现玩家积分排行榜。",
+    "commands": [
+      {
+        "command": "ZADD leaderboard 1000 \"player1\"",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZADD leaderboard 1200 \"player2\"",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZADD leaderboard 800 \"player3\"",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZREVRANGE leaderboard 0 2 WITHSCORES",
+        "expected_output": "1) \"player2\"\n2) \"1200\"\n3) \"player1\"\n4) \"1000\"\n5) \"player3\"\n6) \"800\""
+      }
+    ]
+  },
+  "GDS_INT_003": {
+    "remark": "消息队列: 异步任务处理系统，如邮件发送和图像处理。",
+    "commands": [
+      {
+        "command": "LPUSH tasks \"send_email:user@example.com\"",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "LPUSH tasks \"process_image:photo1.jpg\"",
+        "expected_output": "(integer) 2"
+      },
+      {
+        "command": "RPOP tasks",
+        "expected_output": "\"send_email:user@example.com\""
+      }
+    ]
+  },
+  "GDS_INT_004": {
+    "remark": "实时分析: 统计网站的每日页面访问量。",
+    "commands": [
+      {
+        "command": "INCR page_views",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "EXPIRE page_views 86400",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "GET page_views",
+        "expected_output": "\"1\""
+      }
+    ]
+  },
+  "GDS_INT_005": {
+    "remark": "分布式锁: 在分布式系统中锁定共享资源，确保一致性。",
+    "commands": [
+      {
+        "command": "SET resource_lock \"1\" NX PX 10000",
+        "expected_output": "OK"
+      },
+      {
+        "command": "DEL resource_lock",
+        "expected_output": "(integer) 1"
+      }
+    ]
+  },
+  "GDS_INT_006": {
+    "remark": "限流: 限制API的每分钟调用次数。",
+    "commands": [
+      {
+        "command": "INCR api_calls",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "EXPIRE api_calls 60",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "GET api_calls",
+        "expected_output": "\"1\""
+      }
+    ]
+  },
+  "GDS_INT_007": {
+    "remark": "数据过期: 存储短期有效的验证码。",
+    "commands": [
+      {
+        "command": "SET temp_data \"some value\" EX 30",
+        "expected_output": "OK"
+      },
+      {
+        "command": "TTL temp_data",
+        "expected_output": "(integer) 30"
+      }
+    ]
+  },
+  "GDS_INT_008": {
+    "remark": "全页缓存: 缓存整个网页内容，减少渲染时间。",
+    "commands": [
+      {
+        "command": "SET \"page:/home\" \"<html>...</html>\" EX 300",
+        "expected_output": "OK"
+      },
+      {
+        "command": "GET \"page:/home\"",
+        "expected_output": "\"<html>...</html>\""
+      }
+    ]
+  },
+  "GDS_INT_009": {
+    "remark": "社交功能: 存储用户的好友关系。",
+    "commands": [
+      {
+        "command": "SADD friends:1001 1002 1003 1004",
+        "expected_output": "(integer) 3"
+      },
+      {
+        "command": "SISMEMBER friends:1001 1002",
+        "expected_output": "(integer) 1"
+      }
+    ]
+  },
+  "GDS_INT_010": {
+    "remark": "实时推荐系统: 基于用户偏好的商品推荐系统。",
+    "commands": [
+      {
+        "command": "ZADD user:1001:preferences 5 \"category:electronics\" 3 \"category:books\"",
+        "expected_output": "(integer) 2"
+      },
+      {
+        "command": "ZREVRANGE user:1001:preferences 0 -1 WITHSCORES",
+        "expected_output": "1) \"category:electronics\"\n2) \"5\"\n3) \"category:books\"\n4) \"3\""
+      }
+    ]
+  },
+  "GDS_INT_011": {
+    "remark": "时间序列数据: 存储和查询温度传感器数据。",
+    "commands": [
+      {
+        "command": "ZADD sensor:temp 1687449600 25.5",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZADD sensor:temp 1687453200 26.2",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZRANGE sensor:temp 1687449600 1687453200 BYSCORE WITHSCORES",
+        "expected_output": "1) \"25.5\"\n2) \"1687449600\"\n3) \"26.2\"\n4) \"1687453200\""
+      }
+    ]
+  },
+  "GDS_INT_012": {
+    "remark": "任务调度: 基于时间的任务调度系统。",
+    "commands": [
+      {
+        "command": "ZADD scheduled_tasks 1687500000 \"backup_database\"",
+        "expected_output": "(integer) 1"
+      },
+      {
+        "command": "ZRANGEBYSCORE scheduled_tasks 0 1687500000",
+        "expected_output": "1) \"backup_database\""
+      }
+    ]
+  }
+}

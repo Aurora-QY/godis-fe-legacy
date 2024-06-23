@@ -8,16 +8,16 @@
       <el-button type="primary" :disabled="isTestRunning" @click="startStressTest"> 开始压力测试 </el-button>
       <el-button type="danger" :disabled="!isTestRunning" @click="stopStressTest"> 停止压力测试 </el-button>
       <div>
-        <el-card style="width: 30%; display: inline-block">
+        <el-card>
           <div id="connectionsChart" ref="connectionsChart" style="width: 100%; height: 400px" />
           <div>当前连接数: {{ testStatus.currentConnections }}</div>
         </el-card>
-        <el-card style="width: 30%; margin-left: 10px; display: inline-block">
+        <el-card>
           <div id="successfulCommandsChart" ref="successfulCommandsChart" style="width: 100%; height: 400px" />
           <div>成功命令数: {{ testStatus.successfulCommands }}</div>
         </el-card>
 
-        <el-card style="width: 30%; margin-left: 10px; display: inline-block">
+        <el-card>
           <div id="failedCommandsChart" ref="failedCommandsChart" style="width: 100%; height: 400px" />
           <div>失败命令数: {{ testStatus.failedCommands }}</div>
         </el-card>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import * as echarts from 'echarts'
 import Sidebar from '../components/Sidebar.vue'
 
@@ -59,7 +60,7 @@ export default {
   methods: {
     async startStressTest() {
       try {
-        // await axios.post('/api/startStressTest')
+        await axios.post('/api/startStressTest')
         this.isTestRunning = true
         this.startStatusPolling()
       } catch (error) {
@@ -69,7 +70,7 @@ export default {
     },
     async stopStressTest() {
       try {
-        // await axios.post('/api/stopStressTest')
+        await axios.post('/api/stopStressTest')
         this.isTestRunning = false
         this.stopStatusPolling()
       } catch (error) {
@@ -88,17 +89,17 @@ export default {
     },
     async getTestStatus() {
       try {
-        // const response = await axios.get('/api/getTestStatus')
+        const response = await axios.get('/api/getTestStatus')
         // 模拟后端返回的数据
-        const response = {
-          data: {
-            data: {
-              currentConnections: Math.floor(Math.random() * 10) + 1,
-              successfulCommands: Math.floor(Math.random() * 10) + 1,
-              failedCommands: Math.floor(Math.random() * 10) + 1,
-            },
-          },
-        }
+        // const response = {
+        //   data: {
+        //     data: {
+        //       currentConnections: Math.floor(Math.random() * 10) + 1,
+        //       successfulCommands: Math.floor(Math.random() * 10) + 1,
+        //       failedCommands: Math.floor(Math.random() * 10) + 1,
+        //     },
+        //   },
+        // }
         this.testStatus = response.data.data
         this.updateCharts(this.testStatus)
       } catch (error) {
@@ -139,7 +140,6 @@ export default {
         yAxis: {
           type: 'value',
           min: 0,
-          max: 10,
         },
         series: [
           {
